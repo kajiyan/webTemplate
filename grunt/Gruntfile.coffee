@@ -287,7 +287,7 @@ module.exports = (grunt) ->
 
 
   # Ailas
-  grunt.registerTask "default", "watch"
+  grunt.registerTask "default", ["bower:install", "watch"]
   grunt.registerTask "w", "watch"
   grunt.registerTask "c", ["clean:js",  "clean:css"]
   grunt.registerTask "main", ["coffee:main", "compass:main"]
