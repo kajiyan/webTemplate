@@ -5,17 +5,20 @@ webTemplate 0.7.1
 
 ## Setup
 
-$ cd webTemplate-master/grunt
-$ sudo npm install
-$ grunt
+$ cd webTemplate-master/grunt  
+$ sudo npm install  
+$ grunt  
 
 ## Depends
 
-* grunt
+grunt
 * [http://gruntjs.com/](http://gruntjs.com/)
 
-* webpack
+webpack
 * [http://webpack.github.io/](http://webpack.github.io/)
 
-* bower
+bower
 * [http://bower.io/](http://bower.io/)
+
+LiveReload
+* [https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
