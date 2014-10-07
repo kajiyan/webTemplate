@@ -40,3 +40,5 @@
   }
 
 }).call(this);
+
+//# sourceMappingURL=setting.js.map

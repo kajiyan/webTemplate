@@ -1,3 +1,4 @@
+require "../compile/css/wp-style.css"
 require "./typeEvent"
 require "./typeFrameWork"
 
@@ -22,7 +23,7 @@ do (window, document, $=jQuery) ->
  
     # --------------------------------------------------------------
     sn.tf.setup ->
-      console.log "Setup TypeFrameWork App"
+      console.log "Setup TypeFrameWork App AA"
 
     # --------------------------------------------------------------
     sn.tf.update ->

@@ -29,6 +29,9 @@ exclude = [
 ]
 
 module.exports = (grunt) ->
+  HOST = "localhost"
+  PORT = 8080
+
   pkg = grunt.file.readJSON "package.json"
 
   grunt.file.expand("node_modules/grunt-*/tasks").forEach(grunt.loadTasks)
@@ -49,6 +52,7 @@ module.exports = (grunt) ->
       doc        : "../docs"
       js         : "compile/js"
       coffee     : "coffee"
+      sass       : "sass"
       css        : "compile/css"
       cssCompile : "<%= dir.src %>/css.compile"
 
@@ -95,7 +99,7 @@ module.exports = (grunt) ->
       main :
         expand: true
         ext : ".css"
-        src : ["<%= dir.src %>/sass/*.scss"]
+        src : ["<%= dir.src %>/<%= dir.sass %>/*.scss"]
         options :
           config : "config.rb"
           environment: "production"
@@ -231,33 +235,72 @@ module.exports = (grunt) ->
           debug: true
     open:
       dev:
-        path: "http://localhost:8080/webpack-dev-server/index.html"
+        path: "http://" + HOST + ":" + PORT + "/"
         options: 
           delay: 500
+      webpackDev:
+        path: "http://" + HOST + ":" + PORT + "/webpack-dev-server/index.html"
+        options: 
+          delay: 500
+
+    # ------------------------------
+    # Test Server
+    # ------------------------------
+    connect:
+      server:
+        options: 
+          hostname: HOST
+          port: PORT
+          base: "<%= dir.src %>/compile/"
+      livereload: 
+        options: 
+          port: PORT
 
     # ------------------------------
     # File watching
     # ------------------------------
     watch:
-      # app: {
-      #   files: ["app/**/*", "web_modules/**/*"],
-      #   tasks: ["webpack:build-dev"],
-      #   options:
-      #     spawn: false
+      options:
+        livereload: true
+      html:
+        files : [
+          "<%= dir.src %>/compile/*.html",
+          "<%= dir.src %>/compile/**/*.html",
+          "<%= dir.src %>/compile/**/**/*.html"
+        ]
       coffee:
-        files : "<%= dir.src %>/<%= dir.coffee %>/*.coffee"
-        tasks : "coffee:main"
+        files : [
+          "<%= dir.src %>/<%= dir.coffee %>/*.coffee",
+          "!<%= dir.src %>/<%= dir.coffee %>/**/index.coffee",
+          "!<%= dir.src %>/<%= dir.coffee %>/index.coffee",
+          "!<%= dir.src %>/<%= dir.coffee %>/wp-*.coffee"
+        ]
+        tasks : ["coffee:main"]
       # coffeeAll:
       #   files : '<%= coffee.all.src %>'
       #   tasks : 'coffee:all'
       compass:
-        files : "<%= compass.main.src %>"
-        tasks : "compass:main"
+        files : [
+          "<%= dir.src %>/<%= dir.sass %>/*.scss",
+          "!<%= dir.src %>/<%= dir.sass %>/wp-*.scss"
+        ]
+        tasks : ["compass:main"]
       # compassAll:
       #   files : '<%= compass.all.src %>'
       #   tasks : 'compass:all'
       css:
         files : "<%= concat.css.src %>"
+      wpCoffee:
+        files : [
+          "<%= dir.src %>/<%= dir.coffee %>/index.coffee",
+          "<%= dir.src %>/<%= dir.coffee %>/**/index.coffee",
+          "<%= dir.src %>/<%= dir.coffee %>/wp-*.coffee"
+        ]
+        tasks : ["webpack:build-dev"]
+      wpCompass:
+        files : ["<%= dir.src %>/<%= dir.sass %>/wp-*.scss"]
+        tasks : ["compass:main", "webpack:build-dev"]
+
 
     # ------------------------------
     # yuidoc
@@ -287,8 +330,9 @@ module.exports = (grunt) ->
 
 
   # Ailas
-  grunt.registerTask "default", ["bower:install", "watch"]
+  grunt.registerTask "default", ["bower:install", "open:dev", "connect:server", "watch"]
   grunt.registerTask "w", "watch"
+  grunt.registerTask "lib", "bower:install"
   grunt.registerTask "c", ["clean:js",  "clean:css"]
   grunt.registerTask "main", ["coffee:main", "compass:main"]
   grunt.registerTask "compile", ["coffee:all", "compass:all"]
@@ -296,8 +340,8 @@ module.exports = (grunt) ->
   grunt.registerTask "build", ["clean:build", "copy", "imagemin:dist", "htmlmin", "uglify", "cssmin"]
   grunt.registerTask "guide", ["yuidoc", "styledocco"]
 
-  # Ailas - WEBPACK
-  # Development server
-  grunt.registerTask "wp", ["bower:install", "open:dev", "webpack-dev-server:start"]
+  # Ailas - WEBPACK  
+  # Development webpack server
+  grunt.registerTask "wp", ["bower:install", "open:webpackDev", "webpack-dev-server:start"]
   # Production build
   grunt.registerTask "wpbuild", ["webpack:build"]

@@ -24,6 +24,7 @@
     "grunt-contrib-imagemin": "*",
     "grunt-contrib-htmlmin": "*",
     "grunt-contrib-yuidoc": "*",
+    "grunt-contrib-connect": "*",
     "grunt-bower-task": "*",
     "file-loader": "^0.5.1",
     "html-loader": "^0.2.2",
