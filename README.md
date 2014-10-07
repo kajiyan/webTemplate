@@ -1,4 +1,21 @@
 webTemplate
 ===========
 
-webTemplate 0.7.0
+webTemplate 0.7.1
+
+## Setup
+
+$ cd webTemplate-master/grunt
+$ sudo npm install
+$ grunt
+
+## Depends
+
+* grunt
+* [http://gruntjs.com/](http://gruntjs.com/)
+
+* webpack
+* [http://webpack.github.io/](http://webpack.github.io/)
+
+* bower
+* [http://bower.io/](http://bower.io/)
