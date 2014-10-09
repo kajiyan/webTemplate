@@ -1,9 +1,9 @@
 /*
  * 0-1. clearfix
  */
-.cf:before, .cf:after { content:""; display:table; }
-.cf:after { clear:both; }
-.cf { zoom:1; }
+.cf { 
+	@include clearfix;
+}
 
 /*
  * 0-2. hideText

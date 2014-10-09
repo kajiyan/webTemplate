@@ -1,3 +1,170 @@
+//==========================================
+// Clearfix
+// @include clearfix;
+//==========================================
+@mixin clearfix {
+  @if $support-clearfix-legacy == true {
+    *zoom: 1;
+    &:before,
+    &:after {
+      content: " ";
+      display: table;
+    }
+    &:after {
+      clear: both;
+    }
+  }
+  @else {
+    &:after {
+      content:"";
+      display:table;
+      clear:both;
+    }
+  }
+}
+
+
+
+//==========================================
+// Link Colors
+// @include link-colors($normal, $hover, $active, $visited, $focus)
+//==========================================
+@mixin link-colors($normal, $hover: false, $active: false, $visited: false, $focus: false) {
+  color: $normal;
+  @if $visited {
+    &:visited { color: $visited; }
+  }
+  @if $focus {
+    &:focus { color: $focus; }
+  }
+  @if $hover {
+    &:hover { color: $hover; }
+  }
+  @if $active {
+    &:active { color: $active; }
+  }
+}
+
+
+
+//==========================================
+// Link Underline
+// @include link-underline();
+// @param $type {String} 下線の種類（none, line, line-to-none, none-to-line）
+// @param $important {String or Boolean} 'important' or true
+//==========================================
+@mixin link-underline($type, $important: false) {
+  @if $important == 'important' or $important == true {
+    $important: ' !important';
+  }
+  @else {
+    $important: '';
+  }
+
+  @if $type == line-to-none {
+    &:link,
+    &:visited { text-decoration: underline#{$important}; }
+    &:hover,
+    &:active,
+    &:focus {
+      text-decoration: none#{$important};
+    }
+  }
+  @else if $type == line {
+    &:link,
+    &:visited,
+    &:hover,
+    &:active,
+    &:focus {
+      text-decoration: underline#{$important};
+    }
+  }
+  @else if $type == none-to-line {
+    &:link,
+    &:visited {
+      text-decoration: none#{$important};
+    }
+    &:hover,
+    &:active,
+    &:focus {
+      text-decoration: underline#{$important};
+    }
+  }
+  @else if $type == none {
+    &:link,
+    &:visited,
+    &:hover,
+    &:active,
+    &:focus {
+      text-decoration: none#{$important};
+    }
+  }
+}
+
+
+
+//==========================================
+// em
+// font-size: em(12);
+// font-size: em(12, 24);
+@function em($pxval, $base: $font-base) {
+  @if not unitless($pxval) {
+      $pxval: strip-units($pxval);
+  }
+  @if not unitless($base) {
+      $base: strip-units($base);
+  }
+  @return ($pxval / $base) * 1em;
+}
+
+// rem
+// font-size: rem(12);
+@function rem($pxval) {
+  @if not unitless($pxval) {
+      $pxval: strip-units($pxval);
+  }
+
+  $base: $font-base;
+  @if not unitless($base) {
+      $base: strip-units($base);
+  }
+  @return ($pxval / $base) * 1rem;
+}
+
+// font-size: rem
+// @include fz-rem(12);
+@mixin fz-rem($pxval) {
+  @if $support-rem-legacy == true {
+    font-size: $pxval;
+  }
+  font-size: rem($pxval);
+}
+//==========================================
+
+
+
+//==========================================
+// Image Replace
+// @include image-replace;
+//==========================================
+@mixin image-replace {
+  white-space:nowrap;
+  text-indent: 100%;
+  overflow: hidden;
+}
+
+
+//==========================================
+// ellipsis
+// @include ellipsis;
+//==========================================
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
 // フォントサイズ
 $fontSizeList: 62%, 70%, 77%, 85%, 93%, 100%, 108%, 116%, 124%, 131%, 139%, 147%, 154%, 162%, 170%, 177%, 185%, 193%, 200%, 208%, 216%, 224%, 231%, 239%, 247%, 254%, 262%, 270%, 277%, 285%, 293%, 300%, 308%;
 @mixin fz($size) {
@@ -16,19 +183,6 @@ $fontSizeList: 62%, 70%, 77%, 85%, 93%, 100%, 108%, 116%, 124%, 131%, 139%, 147%
   background-position: center center;
   background-repeat: no-repeat;
 }
-
-// スプライト画像書き出し
-// @mixin sprites($map, $map-item, $isCommon:false) {
-//   @if $isCommon {
-//     background-image: sprite-url($map);
-//     background-repeat: no-repeat;
-//   } @else {
-//     width: round(image-width(sprite-file($map, $map-item)));
-//     height: round(image-height(sprite-file($map, $map-item)));
-//     $pos-y: round(nth(sprite-position($map, $map-item), 2));
-//     background-position: 0 $pos-y;
-//   }
-// }
 
 
 
@@ -199,6 +353,19 @@ $default-animation-iteration-count: infinite;
   @if $delay { @include animation-delay($delay); }
   @if $fill-mode { @include animation-fill-mode($fill-mode); }
 }
+
+
+//==========================================
+@mixin blur($size) {
+  @if not unitless($size) {
+      $size: strip-units($size);
+  }
+
+  filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feGaussianBlur stdDeviation="#{$size}" /></filter></svg>#filter');
+  -webkit-filter: blur($size*1px);
+          filter: blur($size*1px);
+}
+//==========================================
 
 
 
