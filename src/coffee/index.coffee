@@ -6,6 +6,7 @@ require "./typeFrameWork"
 # console.log _
 # console.log Backbone
 
+# $(window).load (window, document, $=jQuery) ->
 do (window, document, $=jQuery) ->
   sn = $.typeApp = {}
 
@@ -23,7 +24,7 @@ do (window, document, $=jQuery) ->
  
     # --------------------------------------------------------------
     sn.tf.setup ->
-      console.log "Setup TypeFrameWork App AA"
+      console.log "Setup TypeFrameWork App"
 
     # --------------------------------------------------------------
     sn.tf.update ->
