@@ -6,6 +6,7 @@ window.SETTING.MODE = "DEBUG"
 window.SETTING.HOST = ""
 window.SETTING.PORT = ""
 
+window.CONSTANT = {}
 
 noop = () ->
 setConsole = () ->
