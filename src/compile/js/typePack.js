@@ -70,7 +70,7 @@
 	    })(TypeEvent);
 	    sn.tf = new $.TypeFrameWork();
 	    sn.tf.setup(function() {
-	      return console.log("Setup TypeFrameWork App AA");
+	      return console.log("Setup TypeFrameWork App");
 	    });
 	    sn.tf.update(function() {});
 	    sn.tf.draw(function() {});

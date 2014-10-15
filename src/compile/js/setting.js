@@ -9,6 +9,8 @@
 
   window.SETTING.PORT = "";
 
+  window.CONSTANT = {};
+
   noop = function() {};
 
   setConsole = function() {

@@ -1,6 +1,6 @@
-require "../compile/css/wp-style.css"
-require "./typeEvent"
-require "./typeFrameWork"
+require "../../compile/css/wp-style.css"
+require "../typeEvent"
+require "../typeFrameWork"
 
 # console.log $
 # console.log _

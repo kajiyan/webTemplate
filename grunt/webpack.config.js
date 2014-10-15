@@ -6,8 +6,8 @@ module.exports = {
   cache: true,
   progress: true,
   entry: {
-    type: "../src/compile/js",
-    typePack: "../src/coffee"
+    type: "../src/compile/js/pack/",
+    typePack: "../src/coffee/pack/"
   },
   output: {
     path: path.join(__dirname, "../src/compile/js"),

@@ -55,6 +55,7 @@ module.exports = (grunt) ->
       sass       : "sass"
       css        : "compile/css"
       cssCompile : "<%= dir.src %>/css.compile"
+      webpack    : "pack"
 
     # ------------------------------
     # package.json file loading
@@ -175,7 +176,8 @@ module.exports = (grunt) ->
         banner: "/*! <%= pkg.name %> <%= grunt.template.today('dd-mm-yyyy') %> */\n"
       main :
         expand : true
-        src : "<%= dir.dist %>/<%= dir.js %>/<%= pkg.name %>.js"
+        src : "<%= dir.dist %>/<%= dir.js %>/*.js"
+        # src : "<%= dir.dist %>/<%= dir.js %>/<%= pkg.name %>.js"
       all :
         expand : true
         src : ["<%= dir.dist %>/**/*.js", "!<%= uglify.main.src %>"]
@@ -187,9 +189,9 @@ module.exports = (grunt) ->
       main :
         expand : true
         src : "<$= dir.dist %>/<%= dir.css %>/<%= pkg.name %>.css"
-      all :
-        expand : true
-        src : ["<%= dir.dist %>/**/*.css", "!<%= cssmin.main.src %>"]
+      # all :
+      #   expand : true
+      #   src : ["<%= dir.dist %>/**/*.css", "!<%= cssmin.main.src %>"]
 
     # ------------------------------
     # BOWER
@@ -290,11 +292,16 @@ module.exports = (grunt) ->
       #   tasks : 'compass:all'
       css:
         files : "<%= concat.css.src %>"
+      wpJs:
+        files : [
+          "<%= dir.src %>/<%= dir.js %>/<%= dir.webpack %>/*.js",
+          "<%= dir.src %>/<%= dir.js %>/<%= dir.webpack %>/**/*.coffee"
+        ]
+        tasks : ["webpack:build-dev"]
       wpCoffee:
         files : [
-          "<%= dir.src %>/<%= dir.coffee %>/index.coffee",
-          "<%= dir.src %>/<%= dir.coffee %>/**/index.coffee",
-          "<%= dir.src %>/<%= dir.coffee %>/wp-*.coffee"
+          "<%= dir.src %>/<%= dir.coffee %>/<%= dir.webpack %>/*.coffee",
+          "<%= dir.src %>/<%= dir.coffee %>/<%= dir.webpack %>/**/*.coffee"
         ]
         tasks : ["webpack:build-dev"]
       wpCompass:
@@ -337,11 +344,11 @@ module.exports = (grunt) ->
   grunt.registerTask "main", ["coffee:main", "compass:main"]
   grunt.registerTask "compile", ["coffee:all", "compass:all"]
   grunt.registerTask "img", "imagemin:dev"
-  grunt.registerTask "build", ["clean:build", "copy", "imagemin:dist", "htmlmin", "uglify", "cssmin"]
+  grunt.registerTask "build", ["clean:build", "copy", "imagemin:dist", "htmlmin", "uglify:main", "cssmin"]
   grunt.registerTask "guide", ["yuidoc", "styledocco"]
 
   # Ailas - WEBPACK  
   # Development webpack server
   grunt.registerTask "wp", ["bower:install", "open:webpackDev", "webpack-dev-server:start"]
   # Production build
-  grunt.registerTask "wpbuild", ["webpack:build"]
+  grunt.registerTask "wpbuild", ["webpack:build", "clean:build", "copy", "imagemin:dist", "htmlmin", "uglify:main", "cssmin"]
