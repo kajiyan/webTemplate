@@ -5,7 +5,7 @@ module.exports = (window=window, document=document, $=jQuery) ->
 
   # ------------------------------------------------------------
   # IMPORT TYPE PACKAGE
-  require("./typeImport.wp")(window)
+  require("./typeImport.wp")(window, document, $)
 
   sn = $.TypeFrameWork = {}
   sn.support = {}
