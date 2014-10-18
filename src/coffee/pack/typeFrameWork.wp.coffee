@@ -2,25 +2,31 @@ module.exports = (window=window, document=document, $=jQuery) ->
   # ============================================================
   # IMPORT MODULE
   # ============================================================
-
-  # ------------------------------------------------------------
-  # IMPORT TYPE PACKAGE
   require("./typeImport.wp")(window, document, $)
 
-  sn = $.TypeFrameWork = {}
-  sn.support = {}
- 
-  sn.support.addEventListener = "addEventListener" of document
- 
-  $window = $(window)
+  $window   = $(window)
   $document = $(document)
- 
+
+  sn = $.TypeFrameWork = {}
+  
+  # ------------------------------------------------------------
+  # detect / normalize event names
+  sn.support = {}
+  sn.ua      = {}
+
+  sn.support.addEventListener = "addEventListener" of document
+  sn.support.toucheEvent = "ontouchend" of document
+
+
+  # ------------------------------------------------------------
+  # CONSTANT
+  # ------------------------------------------------------------
   FLT_EPSILON = 0.0000001192092896
   
-  KEY_CHARS = []
+  KEY_CHARS     = []
   KEY_CHARS[27] = "Esc"
-  KEY_CHARS[8] = "BackSpace"
-  KEY_CHARS[9] = "Tab"
+  KEY_CHARS[8]  = "BackSpace"
+  KEY_CHARS[9]  = "Tab"
   KEY_CHARS[32] = "Space"
   KEY_CHARS[45] = "Insert"
   KEY_CHARS[46] = "Delete"
@@ -46,7 +52,7 @@ module.exports = (window=window, document=document, $=jQuery) ->
       @options = $.extend {}, @defaults, options
 
       window.requestAnimationFrame = do =>
-        return window.requestAnimationFrame or window.webkitRequestAnimationFrame or window.mozRequestAnimationFrame or window.oRequestAnimationFrame or window.msRequestAnimationFrame or (callback) => window.setTimeout callback, 1000 / @optiosn.frameRate
+        return window.requestAnimationFrame or window.webkitRequestAnimationFrame or window.mozRequestAnimationFrame or window.oRequestAnimationFrame or window.msRequestAnimationFrame or (callback) => window.setTimeout callback, 1000 / @options.frameRate
 
       window.cancelAnimationFrame = do =>
         return window.cancelAnimationFrame or window.webkitCancelAnimationFrame or window.mozCancelAnimationFrame or window.msCancelAnimationFrame or window.oCancelAnimationFrame or (id) => window.clearTimeout id
@@ -99,7 +105,7 @@ module.exports = (window=window, document=document, $=jQuery) ->
     update: (method = ->) ->
       @lastTime = window.getTime()
 
-      currentFrame = Math.floor( (@lastTime-@startTime) / (1000.0/@optiosn.frameRate) % 2 )
+      currentFrame = Math.floor( (@lastTime-@startTime) / (1000.0/@options.frameRate) % 2 )
 
       if currentFrame isnt @oldFrame
         method()
@@ -213,47 +219,379 @@ module.exports = (window=window, document=document, $=jQuery) ->
 
       return
  
- 
     #--------------------------------------------------------------
-    mouseMoved: (method = ->) ->
+    _pointXY: (e, options) ->
+      defaults =
+        translate: "page"
+      
+      options = $.extend {}, defaults, options
+
+      original = e.originalEvent
+
+      if original.changedTouches
+        _x = (0.5 + original.changedTouches[0]["#{options.translate}X"]) << 0
+        _y = (0.5 + original.changedTouches[0]["#{options.translate}Y"]) << 0
+      else
+        _x = e["#{options.translate}X"] or original["#{options.translate}X"]
+        _y = e["#{options.translate}Y"] or original["#{options.translate}Y"]
+
+      pointData =
+        x: _x
+        y: _y
+      return pointData
+
+    _onPointerStyle: ($el) ->
+      if sn.support.toucheEvent
+        $el.css
+          "-ms-touch-action" : "none"
+          "touch-action"     : "none"
+
+    _offPointerStyle: ($el) ->
+      if sn.support.toucheEvent
+        $el.css
+          "-ms-touch-action" : ""
+          "touch-action"     : ""
+
+
+    #--------------------------------------------------------------
+    pointerDown: (method = ->) ->
       method()
       return
 
-    setMouseMoved: (el, method, translate = "page") ->
-      if not el? and not method?
-        $.error("Some error TypeFrameWork mouseMoved() object.");
- 
-      if @type(el) isnt "object" and @type(method) isnt "function"
-        $.error("Some error TypeFrameWork mouseMoved() object.");
+    onPointerDown: (options) ->
+      defaults =
+        $el: null
+        method: null
+        translate: "page"
+      options = $.extend {}, defaults, options
 
-      @els.push el
+      if not options.$el? and not options.method?
+        $.error("Some error TypeFrameWork pointerDown() object.")
 
-      switch translate
-        when "page" then el.on "mousemove": (e) -> method(e.pageX, e.pageY)
-        when "client" then el.on "mousemove": (e) -> method(e.clientX, e.clientY)
-        when "offset" then el.on "mousemove": (e) -> method(e.offsetX, e.offsetY)
-        else el.on "mousemove": (e) -> method(e.pageX, e.pageY)
+      if @type(options.$el) isnt "object" and
+        @type(options.method) isnt "function" and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork pointerDown() object.")
 
+      @els.push options.$el
+
+      @_onPointerStyle(options.$el)
+      options.$el.on
+        "touchstart mousedown MSPointerDown pointerdown": (e) =>
+          e.preventDefault()
+          pointData = @_pointXY(e)
+          options.method pointData
       return
+
+    offPointerDown: (options) ->
+      defaults =
+        $el: null
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerDown() object.")
+
+      @_offPointerStyle(options.$el)
+      options.$el.off "touchstart mousedown MSPointerDown pointerdown"
 
 
     #--------------------------------------------------------------
-    mousePressed: (method = ->) ->
+    pointerEnter: (method = ->) ->
       method()
       return
 
-    setMousePressed: (el, method) ->
-      if not el? and not method?
-        $.error("Some error TypeFrameWork mousePressed() object.");
+    onPointerEnter: (options) ->
+      defaults =
+        $el: null
+        method: null
+        translate: "page"
+      options = $.extend {}, defaults, options
 
-      if @type(el) isnt "object" and @type(method) isnt "function"
-        $.error("Some error TypeFrameWork mousePressed() object.");
+      if not options.$el? and not options.method?
+        $.error("Some error TypeFrameWork PointerEnter() object.")
+ 
+      if @type(options.$el) isnt "object" and
+        @type(options.method) isnt "function" and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerEnter() object.")
 
-      @els.push el
-      el.on
-        "mousedown": (e) -> method(e.offsetX, e.offsetY)
+      @els.push options.$el
 
+      @_onPointerStyle(options.$el)
+      options.$el.on
+        "mouseenter touchenter MSPointerEnter pointerenter": (e) =>
+          pointData = @_pointXY e, translate: options.translate
+          options.method(pointData)
       return
+
+    offPointerEnter: (options) ->
+      defaults =
+        $el: null
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerEnter() object.")
+
+      @_offPointerStyle(options.$el)
+      options.$el.off "mouseenter touchenter MSPointerEnter pointerenter"
+
+
+    #--------------------------------------------------------------
+    pointerRleave: (method = ->) ->
+      method()
+      return
+
+    onPointerRleave: (options) ->
+      defaults =
+        $el: null
+        method: null
+        translate: "page"
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and not options.method?
+        $.error("Some error TypeFrameWork PointereRleave() object.")
+ 
+      if @type(options.$el) isnt "object" and
+        @type(options.method) isnt "function" and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointereRleave() object.")
+
+      @els.push options.$el
+
+      @_onPointerStyle(options.$el)
+      options.$el.on
+        "mouseleave touchleave MSPointeRleave pointerleave": (e) =>
+          pointData = @_pointXY e, translate: options.translate
+          options.method(pointData)
+      return
+
+    offPointerRleave: (options) ->
+      defaults =
+        $el: null
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointereRleave() object.")
+
+      @_offPointerStyle(options.$el)
+      options.$el.off "mouseleave touchleave MSPointeRleave pointerleave"
+
+
+    #--------------------------------------------------------------
+    pointerMoved: (method = ->) ->
+      method()
+      return
+
+    onPointerMoved: (options) ->
+      defaults =
+        $el: null
+        method: null
+        translate: "page"
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and not options.method?
+        $.error("Some error TypeFrameWork PointerMoved() object.")
+ 
+      if @type(options.$el) isnt "object" and
+        @type(options.method) isnt "function" and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerMoved() object.")
+
+      @els.push options.$el
+
+      @_onPointerStyle(options.$el)
+      options.$el.on
+        "mousemove touchmove MSPointerMove pointermove": (e) =>
+          pointData = @_pointXY e, translate: options.translate
+          options.method(pointData)
+      return
+
+    offPointerMoved: (options) ->
+      defaults =
+        $el: null
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerMoved() object.")
+
+      @_offPointerStyle(options.$el)
+      options.$el.off "mousemove touchmove MSPointerMove pointemove"
+
+
+    #--------------------------------------------------------------
+    pointerOut: (method = ->) ->
+      method()
+      return
+
+    onPointerOut: (options) ->
+      defaults =
+        $el: null
+        method: null
+        translate: "page"
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and not options.method?
+        $.error("Some error TypeFrameWork PointerMoved() object.")
+ 
+      if @type(options.$el) isnt "object" and
+        @type(options.method) isnt "function" and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerMoved() object.")
+
+      @els.push options.$el
+
+      @_onPointerStyle(options.$el)
+      options.$el.on
+        "mouseout pointerout": (e) =>
+          pointData = @_pointXY e, translate: options.translate
+          options.method(pointData)
+      return
+
+    offPointerOut: (options) ->
+      defaults =
+        $el: null
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerMoved() object.")
+
+      @_offPointerStyle(options.$el)
+      options.$el.off "mouseout pointerout"
+
+
+    #--------------------------------------------------------------
+    pointerOver: (method = ->) ->
+      method()
+      return
+
+    onPointerOver: (options) ->
+      defaults =
+        $el: null
+        method: null
+        translate: "page"
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and not options.method?
+        $.error("Some error TypeFrameWork PointerMoved() object.")
+ 
+      if @type(options.$el) isnt "object" and
+        @type(options.method) isnt "function" and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerMoved() object.")
+
+      @els.push options.$el
+
+      @_onPointerStyle(options.$el)
+      options.$el.on
+        "mouseover MSPointerOver pointerover": (e) =>
+          pointData = @_pointXY e, translate: options.translate
+          options.method(pointData)
+      return
+
+    offPointerOver: (options) ->
+      defaults =
+        $el: null
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerMoved() object.")
+
+      @_offPointerStyle(options.$el)
+      options.$el.off "mouseover MSPointerOver pointerover"
+
+
+    #--------------------------------------------------------------
+    pointerUp: (method = ->) ->
+      method()
+      return
+
+    onPointerUp: (options) ->
+      defaults =
+        $el: null
+        method: null
+        translate: "page"
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and not options.method?
+        $.error("Some error TypeFrameWork PointerMoved() object.")
+ 
+      if @type(options.$el) isnt "object" and
+        @type(options.method) isnt "function" and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerMoved() object.")
+
+      @els.push options.$el
+
+      @_onPointerStyle(options.$el)
+      options.$el.on
+        "mouseup touchend touchcancel MSPointerUp pointerup MSPointerCancel pointercancel": (e) =>
+          pointData = @_pointXY e, translate: options.translate
+          options.method(pointData)
+      return
+
+    offPointerUp: (options) ->
+      defaults =
+        $el: null
+      options = $.extend {}, defaults, options
+
+      if not options.$el? and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerMoved() object.")
+
+      @_offPointerStyle(options.$el)
+      options.$el.off "mouseup touchend touchcancel MSPointerUp MSPointerCancel pointercancel"
+
+
+    #--------------------------------------------------------------
+    pointerWheel: (method = ->) ->
+      @_pointerWheel = method
+      return
+
+    onPointerWheel: (options) ->
+      defaults =
+        $el: null
+        method: () ->
+      options = $.extend {}, defaults, options
+
+      if "onwheel" of document
+        eventName = "wheel"
+      else if "onmousewheel" of document
+        eventName = "mousewheel"
+      else
+        eventName = "DOMMouseScroll"
+
+      if not options.$el? and
+        options.$el.jquery.length isnt 0
+          $.error("Some error TypeFrameWork PointerWheel() object.")
+
+      options.$el.on eventName, (e) =>
+        delta = 0
+
+        if e.originalEvent.deltaY
+          delta = -(e.originalEvent.deltaY)
+        else if e.originalEvent.wheelDelta
+          delta = e.originalEvent.wheelDelta
+        else
+          delta = -(e.originalEvent.detail)
+
+        if delta < 0
+          e.preventDefault()
+          result =
+            "direction": "down"
+            "delta": delta
+          options.method(result)
+        else if delta > 0
+          e.preventDefault()
+          result =
+            "direction": "up"
+            "delta": delta
+          options.method(result)
 
 
     #--------------------------------------------------------------
@@ -276,29 +614,6 @@ module.exports = (window=window, document=document, $=jQuery) ->
  
  
     #--------------------------------------------------------------
-    mouseReleased: (method = ->) ->
-      method()
-      return
- 
-    setMouseReleased: (el, method, translate = "page") ->
-      if not el? and not method?
-        $.error("Some error TypeFrameWork mouseReleased() object.");
- 
-      if @type(el) isnt "object" and @type(method) isnt "function"
-        $.error("Some error TypeFrameWork mouseReleased() object.");
- 
-      @els.push el
-      
-      switch translate
-        when "page" then el.on "mouseup": (e) -> method(e.pageX, e.pageY)
-        when "client" then el.on "mouseup": (e) -> method(e.clientX, e.clientY)
-        when "offset" then el.on "mouseup": (e) -> method(e.offsetX, e.offsetY)
-        else el.on "mouseup": (e) -> method(e.pageX, e.pageY)
-
-      return
- 
- 
-    #--------------------------------------------------------------
     windowResized: (method) ->
       @_windowResized = method
       return
@@ -310,7 +625,7 @@ module.exports = (window=window, document=document, $=jQuery) ->
         w = $window.width()
         h = $window.height()
         @_windowResized w, h
-      , @optiosn.resizeInterval
+      , @options.resizeInterval
       return
  
     #--------------------------------------------------------------
@@ -619,10 +934,10 @@ module.exports = (window=window, document=document, $=jQuery) ->
     # END Path Helper
     #--------------------------------------------------------------
     getFrameRate: () ->
-      return @optiosn.frameRate
+      return @options.frameRate
  
     getResizeInterval: () ->
-      return @optiosn.resizeInterval
+      return @options.resizeInterval
  
     getWindowWidth: () ->
       return $window.width()
