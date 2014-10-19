@@ -947,6 +947,36 @@ module.exports = (window=window, document=document, $=jQuery) ->
  
     getLandscape: () ->
       return @_checkLandScape()
+
+    getLocation: (options) ->
+      defaults =
+        success: () ->
+        error: () ->
+        complete: () ->
+      options = $.extend {}, defaults, options
+
+      return $.Deferred (defer) =>
+        if sn.support.geolocation
+          startTime = new Date()
+          watchID = navigator.geolocation.watchPosition (e) =>
+            currentTime = new Date()
+
+            diifTime = currentTime - startTime
+
+            # 一定値以上の精度もしくは一定の時間を超えたら経度緯度を引数に関数を呼ぶ
+            if e.coords.accuracy < 300 or diifTime > 5000
+              navigator.geolocation.clearWatch(watchID)
+
+              options.success(e.coords)
+              defer.resolve(e.coords)
+          , (error) =>
+            options.error(error)
+        else
+          options.error()
+          defer.reject()
+      .promise().always( ->
+        options.complete()
+      )
     #--------------------------------------------------------------
     # Cast Helper
     #--------------------------------------------------------------
