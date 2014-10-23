@@ -977,6 +977,34 @@ module.exports = (window=window, document=document, $=jQuery) ->
       .promise().always( ->
         options.complete()
       )
+
+    getBrowser: () ->
+      result = {}
+      dataBrowser = [
+        { string: navigator.userAgent, subString: "Chrome",  identity: "Chrome" }
+        { string: navigator.userAgent, subString: "MSIE",    identity: "Explorer" }
+        { string: navigator.userAgent, subString: "Firefox", identity: "Firefox" }
+        { string: navigator.userAgent, subString: "Safari",  identity: "Safari" }
+        { string: navigator.userAgent, subString: "Opera",   identity: "Opera" }
+      ]
+
+      for i in [0...dataBrowser.length]
+        dataString = dataBrowser[i].string
+        versionSearchString = dataBrowser[i].subString
+
+        if dataString.indexOf(dataBrowser[i].subString) isnt -1
+          result.browser = dataBrowser[i].identity
+          break
+        else
+          result.browser = "Other"
+
+      index = dataString.indexOf(versionSearchString)
+      if index is -1
+        result.version = "Unknown"
+      else
+        result.version = parseFloat(dataString.substring(index + versionSearchString.length + 1))
+
+      return result 
     #--------------------------------------------------------------
     # Cast Helper
     #--------------------------------------------------------------
