@@ -339,11 +339,11 @@ module.exports = (window=window, document=document, $=jQuery) ->
 
 
     #--------------------------------------------------------------
-    pointerRleave: (method = ->) ->
+    pointerLeave: (method = ->) ->
       method()
       return
 
-    onPointerRleave: (options) ->
+    onPointerLeave: (options) ->
       defaults =
         $el: null
         method: null
@@ -351,23 +351,23 @@ module.exports = (window=window, document=document, $=jQuery) ->
       options = $.extend {}, defaults, options
 
       if not options.$el? and not options.method?
-        $.error("Some error TypeFrameWork PointereRleave() object.")
+        $.error("Some error TypeFrameWork PointereLeave() object.")
  
       if @type(options.$el) isnt "object" and
         @type(options.method) isnt "function" and
         options.$el.jquery.length isnt 0
-          $.error("Some error TypeFrameWork PointereRleave() object.")
+          $.error("Some error TypeFrameWork PointereLeave() object.")
 
       @els.push options.$el
 
       @_onPointerStyle(options.$el)
       options.$el.on
-        "mouseleave touchleave MSPointeRleave pointerleave": (e) =>
+        "mouseleave touchleave MSPointeLeave pointeLeave": (e) =>
           pointData = @_pointXY e, translate: options.translate
           options.method(pointData)
       return
 
-    offPointerRleave: (options) ->
+    offPointerLeave: (options) ->
       defaults =
         $el: null
       options = $.extend {}, defaults, options
