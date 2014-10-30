@@ -56,7 +56,7 @@ do (window, document, $=jQuery) ->
     sn.tf.pointerEnter ->
 
     # --------------------------------------------------------------
-    sn.tf.pointerRleave ->
+    sn.tf.pointerLeave ->
 
     # --------------------------------------------------------------
     sn.tf.pointerMoved ->
