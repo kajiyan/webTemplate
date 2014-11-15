@@ -947,6 +947,14 @@ module.exports = (window=window, document=document, $=jQuery) ->
  
     getLandscape: () ->
       return @_checkLandScape()
+    
+    getElPx: ($el, propety) ->
+      l = $el.css propety
+      if l is "auto"
+        l = 0
+      else
+        l = (l.replace /px/, '') * 1
+      return l
 
     getLocation: (options) ->
       defaults =
