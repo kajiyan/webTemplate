@@ -48,5 +48,5 @@ module.exports = (function(window){
     setting.BASE_IMG_URL = "";
   }
 
-  return window;
+  return setting;
 })({});
