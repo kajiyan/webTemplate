@@ -39,7 +39,7 @@ module.exports = {
     extensions: ["", ".web.coffee", ".web.js", ".coffee", ".js"]
   },
   resolveLoader: {
-    root: [path.join(__dirname, "node_modules"), path.join(__dirname, "bower_components")]
+    root: [path.join(__dirname, "app_components"), path.join(__dirname, "node_modules"), path.join(__dirname, "bower_components")]
   },
   plugins: [
     new webpack.ResolverPlugin([
