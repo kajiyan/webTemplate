@@ -1,6 +1,6 @@
 require "../../compile/css/wp-style.css"
-require("./typeFrameWork.wp")(window, document, $)
 
+window.SETTING = require "config/setting"
 
 # console.log TypeEvent
 # console.log $.TypeFrameWork
@@ -14,6 +14,18 @@ require("./typeFrameWork.wp")(window, document, $)
 do (window, document, $=jQuery) ->
   sn = $.typeApp = {}
 
+  # ============================================================
+  # TypeFrameWork
+  require("./typeFrameWork.wp")(window, document, $)
+  sn.tf = new $.TypeFrameWork()
+
+  # ============================================================
+  # Library
+
+  # ============================================================
+  # Module
+  require("./router")(sn, $, Backbone, _)
+
   $ ->
     # ============================================================
     # StageClass ( Test Class )
@@ -23,16 +35,28 @@ do (window, document, $=jQuery) ->
         @
  
     # ============================================================
-    # TypeFrameWork
-    sn.tf = new $.TypeFrameWork()
+    # Module
+
+    # ============================================================
+    # PAGE
+
+    # ============================================================
+    # POPUP
+    
+    # ============================================================
+    # ROUTER
+    sn.router = new sn.Router()
  
     # --------------------------------------------------------------
     sn.tf.setup ->
-      console.log "Setup TypeFrameWork App"
+      $.when(
+        sn.router.setup()
+      ).then( =>
+        console.log "- SETUP APP -"
+      )
 
     # --------------------------------------------------------------
     sn.tf.update ->
-      console.log 
 
     # --------------------------------------------------------------
     sn.tf.draw ->

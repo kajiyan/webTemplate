@@ -34,8 +34,8 @@ module.exports = {
     ]
   },
   resolve: {
-    root: [path.join(__dirname, "node_modules"), path.join(__dirname, "bower_components")],
-    moduleDirectories: ["node_modules", "bower_components"],
+    root: [path.join(__dirname, "app_components"), path.join(__dirname, "node_modules"), path.join(__dirname, "bower_components")],
+    moduleDirectories: ["app_components", "node_modules", "bower_components"],
     extensions: ["", ".web.coffee", ".web.js", ".coffee", ".js"]
   },
   resolveLoader: {
