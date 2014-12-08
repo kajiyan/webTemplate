@@ -13,7 +13,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, "../src/compile/js"),
-    publicPath: "js/",
+    publicPath: setting.BASE_URL,
     filename: "[name].js",
     chunkFilename: '[chunkhash].js'
   },
