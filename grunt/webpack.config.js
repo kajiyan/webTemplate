@@ -1,6 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
-//
+
+var setting = require("./app_components/config/setting.js");
+
 module.exports = {
   // context: __dirname,
   cache: true,
@@ -22,9 +24,9 @@ module.exports = {
       { test: /\.scss$/, loader: "style!css!sass?outputStyle=expanded&includePaths[]=" + (path.resolve(__dirname, './bower_components/bootstrap-sass-official')) },
       { test: /\.coffee$/, loader: "coffee" },
       { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
-      { test: /\.png$/, loader: "url-loader?prefix=img/&limit=5000" },
-      { test: /\.jpg$/, loader: "url-loader?prefix=img/&limit=5000" },
-      { test: /\.gif$/, loader: "url-loader?prefix=img/&limit=5000" },
+      { test: /\.png$/, loader: "url-loader?prefix=../images/&limit=5000" },
+      { test: /\.jpg$/, loader: "url-loader?prefix=../images/&limit=5000" },
+      { test: /\.gif$/, loader: "url-loader?prefix=../images/&limit=5000" },
       { test: /\.woff$/, loader: "url-loader?prefix=font/&limit=5000" },
       { test: /\.eot$/, loader: "file-loader?prefix=font/" },
       { test: /\.ttf$/, loader: "file-loader?prefix=font/" },
