@@ -12,9 +12,6 @@ module.exports = (window=window, document=document, $=jQuery) ->
     #--------------------------------------------------------------
     constructor: (options) ->
       window.requestAnimationFrame = do ->
-        # return (callback, fps) ->
-        #   window.setTimeout callback, 1000 / fps
-        #   return
         return window.requestAnimationFrame or
           window.webkitRequestAnimationFrame or
           window.mozRequestAnimationFrame or
@@ -24,13 +21,7 @@ module.exports = (window=window, document=document, $=jQuery) ->
             window.setTimeout callback, 1000 / fps
             return
 
-      if not Modernizr.svg
-        alert window.requestAnimationFrame
-
       window.cancelAnimationFrame = do ->
-        # return (id) ->
-        #   window.clearTimeout id
-        #   return
         return window.cancelAnimationFrame or
           window.webkitCancelAnimationFrame or
           window.webkitCancelRequestAnimationFrame or
