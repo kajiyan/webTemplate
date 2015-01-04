@@ -11,6 +11,43 @@ module.exports = (window=window, document=document, $=jQuery) ->
       frameRate: 60
     #--------------------------------------------------------------
     constructor: (options) ->
+      window.requestAnimationFrame = do ->
+        # return (callback, fps) ->
+        #   window.setTimeout callback, 1000 / fps
+        #   return
+        return window.requestAnimationFrame or
+          window.webkitRequestAnimationFrame or
+          window.mozRequestAnimationFrame or
+          window.oRequestAnimationFrame or
+          window.msRequestAnimationFrame or
+          (callback, fps) ->
+            window.setTimeout callback, 1000 / fps
+            return
+
+      if not Modernizr.svg
+        alert window.requestAnimationFrame
+
+      window.cancelAnimationFrame = do ->
+        # return (id) ->
+        #   window.clearTimeout id
+        #   return
+        return window.cancelAnimationFrame or
+          window.webkitCancelAnimationFrame or
+          window.webkitCancelRequestAnimationFrame or
+          window.mozCancelAnimationFrame or
+          window.mozCancelRequestAnimationFrame or
+          window.msCancelAnimationFrame or
+          window.msCancelRequestAnimationFrame or
+          window.oCancelAnimationFrame or
+          window.oCancelRequestAnimationFrame or
+          (id) ->
+            window.clearTimeout id
+            return
+      
+      window.getTime = ->
+        now = window.perfomance and (perfomance.now or perfomance.webkitNow or perfomance.mozNow or perfomance.msNow or perfomance.oNow)
+        return ( now and now.cell perfomance ) or ( new Date().getTime() )
+
       @options = $.extend {}, @defaults, options
       @updateProcess = $.noop
       @lastTime = null
@@ -22,12 +59,11 @@ module.exports = (window=window, document=document, $=jQuery) ->
       @startTime = window.getTime()
     #--------------------------------------------------------------
     update: (method = $.noop) ->
-      @updateProcess = window.requestAnimationFrame =>
-        @update method
+      @updateProcess = window.requestAnimationFrame => @update method, @options.frameRate
  
       @lastTime = window.getTime()
  
-      currentFrame = Math.floor( (@lastTime - @startTime) / (1000.0 / @optiosn.frameRate) % 2 )
+      currentFrame = Math.floor( (@lastTime - @startTime) / (1000.0 / @options.frameRate) % 2 )
       if currentFrame isnt @oldFrame
         method()
         if @_draw?
