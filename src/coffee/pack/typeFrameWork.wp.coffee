@@ -51,11 +51,29 @@ module.exports = (window=window, document=document, $=jQuery) ->
     constructor: (options) ->
       @options = $.extend {}, @defaults, options
 
-      window.requestAnimationFrame = do =>
-        return window.requestAnimationFrame or window.webkitRequestAnimationFrame or window.mozRequestAnimationFrame or window.oRequestAnimationFrame or window.msRequestAnimationFrame or (callback) => window.setTimeout callback, 1000 / @options.frameRate
+      window.requestAnimationFrame = do ->
+        return window.requestAnimationFrame or
+          window.webkitRequestAnimationFrame or
+          window.mozRequestAnimationFrame or
+          window.oRequestAnimationFrame or
+          window.msRequestAnimationFrame or
+          (callback, fps) ->
+            window.setTimeout callback, 1000 / fps
+            return
 
-      window.cancelAnimationFrame = do =>
-        return window.cancelAnimationFrame or window.webkitCancelAnimationFrame or window.mozCancelAnimationFrame or window.msCancelAnimationFrame or window.oCancelAnimationFrame or (id) => window.clearTimeout id
+      window.cancelAnimationFrame = do ->
+        return window.cancelAnimationFrame or
+          window.webkitCancelAnimationFrame or
+          window.webkitCancelRequestAnimationFrame or
+          window.mozCancelAnimationFrame or
+          window.mozCancelRequestAnimationFrame or
+          window.msCancelAnimationFrame or
+          window.msCancelRequestAnimationFrame or
+          window.oCancelAnimationFrame or
+          window.oCancelRequestAnimationFrame or
+          (id) ->
+            window.clearTimeout id
+            return
 
       window.getTime = ->
         now = window.perfomance and (perfomance.now or perfomance.webkitNow or perfomance.mozNow or perfomance.msNow or perfomance.oNow)
@@ -114,9 +132,7 @@ module.exports = (window=window, document=document, $=jQuery) ->
 
       @oldFrame = currentFrame
 
-      @updateProcess = window.requestAnimationFrame =>
-        @update method
-        return
+      @updateProcess = window.requestAnimationFrame( => @update method, @options.frameRate )
 
       return
 
