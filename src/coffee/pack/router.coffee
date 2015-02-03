@@ -35,7 +35,7 @@ module.exports = (sn, $, Backbone, _) ->
 
         Backbone.history.start
           pushState: true
-          root: SETTING.BASE_PATH
+          root: sn.SETTING.BASE_PATH
 
         @_events()
 
