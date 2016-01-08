@@ -40,3 +40,10 @@ publish
 
 node_modules
 bower_components
+system/app_components/backbone.marionette.min.js
+system/app_components/device.min.js
+system/app_components/jquery.min.js
+system/app_components/lodash.min.js
+system/app_components/modernizr.min.js
+system/app_components/velocity.min.js
+system/app_components/velocity.ui.min.js

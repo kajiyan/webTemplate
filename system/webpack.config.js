@@ -34,11 +34,12 @@ export default function (target, setting) {
         { test: /\.svg$/, loader: "file?prefix=font/" },
         { test: /\.wav$/, loader: "file" },
         { test: /\.mp3$/, loader: "file" },
+        // { test: /angular\.js$/, loader: 'exports?angular' },
         { 
-          test: /\.js$/,
+          test: /\.babel\.js$/,
           exclude: /node_modules/,
           loader: 'babel'
-        }
+        },
       ]
     },
     resolve: {
@@ -65,10 +66,12 @@ export default function (target, setting) {
       let result = [
         new BowerWebpackPlugin(),
         new webpack.ProvidePlugin({
-          jQuery: "jquery",
-          $: "jquery",
-          _: "lodash",
-          Backbone: "backbone"
+          jQuery: 'jquery',
+          $: 'jquery',
+          _: 'lodash',
+          Backbone: 'backbone',
+          Modernizr: 'modernizr/modernizr',
+          Device: 'devicejs'
         })
       ];
       
