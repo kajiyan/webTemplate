@@ -36,8 +36,8 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
 
   let urlSet = {
     PRODUCTION() {
-      result.FB_APP_ID = '';
-      result.GA_ID = '';
+      result.FB_APP_ID = '000000000000000';
+      result.GA_ID = 'UA-00000000-0';
       result.HOST = PRODUCTION_HOST;
       result.PORT = PRODUCTION_PORT;
       result.BASE_URL = '//' + PRODUCTION_HOST + '/';
@@ -45,8 +45,8 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
       result.COMMON_BASE_PATH = `/${result.COMMON}/`;
     },
     DEBUG () {
-      result.FB_APP_ID = '';
-      result.GA_ID = '';
+      result.FB_APP_ID = '000000000000000';
+      result.GA_ID = 'UA-00000000-0';
       result.HOST = DEBUG_HOST;
       result.PORT = DEBUG_PORT;
       result.BASE_URL = '//' + DEBUG_HOST + '/';
@@ -54,8 +54,8 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
       result.COMMON_BASE_PATH = `/${result.COMMON}/`;
     },
     DEBUG_LOCAL() {
-      result.FB_APP_ID = '';
-      result.GA_ID = '';
+      result.FB_APP_ID = '000000000000000';
+      result.GA_ID = 'UA-00000000-0';
       result.HOST = DEBUG_LOCAL_HOST;
       result.PORT = DEBUG_LOCAL_PORT;
       result.BASE_URL = '//' + DEBUG_LOCAL_HOST + '/';

@@ -1,0 +1,86 @@
+/* =============================================================================
+    State
+   ========================================================================== */
+.is-debug {
+  @include box-shadow(rgb(255, 255, 255) 0px 0px 0px 1px inset);
+  background-color: rgba(204, 204, 204, 0.05);
+  * {
+		@include box-shadow(rgb(255, 255, 255) 0px 0px 0px 1px inset);
+    background-color: rgba(204, 204, 204, 0.05);
+	}
+
+  .is-debug--none {
+    @include box-shadow(none);
+    background-color: transparent;
+    * {
+      @include box-shadow(none);
+      background-color: transparent;
+    }    
+  }
+}
+
+
+
+.is-hidden {
+  position: fixed;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  clip: rect(0 0 0 0);
+}
+
+%is-hidden {
+  position: fixed;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.is-invisibility {
+  @include opacity(0.0);
+}
+
+.is-transparent {
+  background-color: transparent;
+  color: transparent;
+}
+
+.is-mp-small-visible {
+  display: none;
+  @include mq-small {
+    display: block;
+  }
+}
+
+.is-mp-small-hidden {
+  display: block;
+  @include mq-small {
+    display: none;
+  }
+}
+
+
+
+%clearfix {
+
+}
+
+// %clearfix {
+//   overflow: none;
+//   *zoom: 1;
+// }
+
+// aside, footer {
+//   @extend %clearfix;
+// }
+
+// #grid-container {
+//   @extend %clearfix;
+// }
+
+// //こうなる
+// aside, footer, #grid-container {
+//   overflow: none;
+//   *zoom: 1;
+// }

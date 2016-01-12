@@ -13,6 +13,7 @@ import notify from 'gulp-notify';
 import using from 'gulp-using';
 import cached from 'gulp-cached';
 import watch from 'gulp-watch';
+import browserSync from 'browser-sync';
 import runSequence from 'run-sequence';
 import minimist from 'minimist';
 import path from 'path';
@@ -33,9 +34,11 @@ let plumberWithNotify = function() {
 for (let key in SETTING.TARGET) {
 	let value = SETTING.TARGET[key];
 
-	// ------------------------------
-  // HTML TEMPLATE
-  // ------------------------------
+	/**
+   * ------------------------------
+   * HTML TEMPLATE
+   * ------------------------------
+   */
   gulp.task(`${key}TemplateEngine`, function() {
     let options = {
       data: SETTING,
@@ -53,9 +56,11 @@ for (let key in SETTING.TARGET) {
       pipe(gulp.dest(`${SETTING.DIST}${value}`));
   });
 
-  // ------------------------------
-  // STYLE
-  // ------------------------------
+  /**
+   * ------------------------------
+   * STYLE
+   * ------------------------------
+   */
   gulp.task(`${key}Style`, function() {
   	gulp.src([`${SETTING.CORE}${SETTING.STYLE}/${key}/*.scss`]).
       pipe(plumberWithNotify()).
@@ -73,9 +78,11 @@ for (let key in SETTING.TARGET) {
       }));
   });
 
-  // ------------------------------
-  // WEB PACK
-  // ------------------------------
+  /**
+   * ------------------------------
+   * WEB PACK
+   * ------------------------------
+   */
   gulp.task(`${key}Webpack`, function(){
   	gulp.src([
       `${SETTING.CORE}${SETTING.ALT_JS}/${key}/*.coffee`,
@@ -90,9 +97,11 @@ for (let key in SETTING.TARGET) {
     pipe(gulp.dest(`${SETTING.DIST}${value}/${SETTING.JS}`));
   });
 
-  // ------------------------------
-	// File watching
-	// ------------------------------
+  /**
+	 * ------------------------------
+   * File watching
+	 * ------------------------------
+   */
   console.log(`========== ${key}: ${value} ==========`);
   console.log(`[${SETTING.ENGINE}]\n  TARGET:\n    ${SETTING.CORE}${SETTING.ENGINE}/${key}/*.${SETTING.ENGINE_ATTRIBUTE}.html\n  TASK:\n    ${key}TemplateEngine`);
 	console.log(`[${SETTING.STYLE}]\n  TARGET:\n    ${SETTING.CORE}${SETTING.STYLE}/${key}/*.scss\n  TASK:\n    ${key}Style`);
@@ -100,8 +109,25 @@ for (let key in SETTING.TARGET) {
 }
 
 
+/**
+ * ------------------------------
+ * Server
+ * ------------------------------
+ */
+gulp.task('server', function() {
+  if (SETTING.MODE === 'DEBUG_LOCAL' && SETTING.PORT !== 80) {
+    browserSync({
+      startPath: './index.html',
+      port: `${SETTING.PORT}`,
+      server: {
+        baseDir: `${SETTING.DIST}`
+      }
+    });
+  }
+});
 
-gulp.task('watch', function() {
+
+gulp.task('watch', ['server'], function() {
   for (let key in SETTING.TARGET) {
     let value = SETTING.TARGET[key];
     
@@ -109,11 +135,15 @@ gulp.task('watch', function() {
       [`${SETTING.CORE}${SETTING.ENGINE}/${key}/*.${SETTING.ENGINE_ATTRIBUTE}.html`],
       [`${key}TemplateEngine`]
     );
+    gulp.watch(`${SETTING.DIST}${value}*.html`).
+      on('change', browserSync.reload)
 
     gulp.watch(
       [`${SETTING.CORE}${SETTING.STYLE}/${key}/*.scss`],
       [`${key}Style`]
     );
+    gulp.watch(`${SETTING.DIST}${value}/${SETTING.CSS}/*.css`).
+      on('change', browserSync.reload)
 
     gulp.watch(
       [
@@ -124,6 +154,8 @@ gulp.task('watch', function() {
       ],
       [`${key}Webpack`]
     );
+    gulp.watch(`${SETTING.DIST}${value}/${SETTING.JS}/*.js`).
+      on('change', browserSync.reload)
   }
 });
 

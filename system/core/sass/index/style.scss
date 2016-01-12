@@ -1,0 +1,20 @@
+@import "compass";
+
+@import "../sass_components/core/_import.scss";
+@import "../sass_components/sanitize/_import.scss";
+@import "../sass_components/module/_import.scss";
+@import "../sass_components/layout/_import.scss";
+@import "../sass_components/state/_import.scss";
+
+a:link {
+  color: #9faec1;
+  text-decoration: none;
+}
+a:visited {
+}
+a:hover,
+a:active,
+a:focus {
+  -moz-outline-style: none;
+  outline: none;
+}
