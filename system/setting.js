@@ -105,9 +105,12 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
     result.SYSTEM      = 'system';
     result.SYSTEM_CORE = 'core';
     result.APPLICATION = 'application';
+    result.DOCS = 'docs';
 
+    result.ROOT = '../'
     result.CORE = `${result.SYSTEM_CORE}/`;
-    result.DIST = `../${result.APPLICATION}/`;
+    result.APPLICATION_DIST = `${result.ROOT}${result.APPLICATION}/`;
+    result.DOCS_DIST = `${result.ROOT}${result.DOCS}/`;
 
     result.BUILDER          = 'gulp';
     result.ENGINE           = 'swig';

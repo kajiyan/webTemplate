@@ -76,24 +76,25 @@ export default function (target, setting) {
       ];
       
       if (SETTING.MODE === 'PRODUCTION') {
-        result.concat([
+        Array.prototype.push.apply(result, [
           new webpack.DefinePlugin({
             'process.env': {
               'NODE_ENV': JSON.stringify('production')
-            }
+            },
+            'BUILD_MODE': JSON.stringify(SETTING.MODE)
           }),
           new webpack.optimize.DedupePlugin(),
           new webpack.optimize.AggressiveMergingPlugin(),
-          new webpack.optimize.UglifyJsPlugin(),
+          new webpack.optimize.UglifyJsPlugin({ output: {comments: false} }),
           new webpack.optimize.OccurenceOrderPlugin()
         ]);
       } else {
-        result.concat([
-          new BowerWebpackPlugin(),
+        Array.prototype.push.apply(result, [
           new webpack.DefinePlugin({
             'process.env': {
               'NODE_ENV': JSON.stringify('production')
-            }
+            },
+            'BUILD_MODE': JSON.stringify(SETTING.MODE)
           })
         ]);
       }
