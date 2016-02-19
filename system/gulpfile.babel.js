@@ -1,3 +1,7 @@
+// gulp build --ENV -m PRODUCTION
+// gulp build --ENV -m DEBUG
+// gulp build --ENV -m DEBUG_LOCAL
+
 // require('babel-core/register');
 
 import webpackConfig from './webpack.config';
@@ -7,7 +11,13 @@ import gulp from 'gulp';
 import rename from 'gulp-rename';
 import swig from 'gulp-swig';
 import webpack from 'gulp-webpack';
-import compass from 'gulp-compass';
+import sass from 'gulp-sass';
+import postcss from 'gulp-postcss';
+import autoprefixer from 'autoprefixer';
+import mqpacker from 'css-mqpacker';
+import csswring from 'csswring';
+// import autoprefixer from 'gulp-autoprefixer';
+// import compass from 'gulp-compass';
 import plumber from 'gulp-plumber';
 import notify from 'gulp-notify';
 import using from 'gulp-using';
@@ -21,7 +31,22 @@ import path from 'path';
 
 let env = minimist(process.argv.slice(2))
 
-const SETTING = setting(env);
+const SETTING = setting((function() {
+  return env['m'] != null ? { mode: env['m'] } : null;
+})());
+
+const SUPPORT_BROWSERS = [
+  'ie >= 9',
+  'ie_mob >= 10',
+  'ff >= 20',
+  'chrome >= 34',
+  'safari >= 7',
+  'opera >= 23',
+  'ios >= 7',
+  'android >= 2.3',
+  'and_ff >= 20',
+  'and_chr >= 34'
+];
 
 /* ------------------------------ */
 let plumberWithNotify = function() {
@@ -62,20 +87,20 @@ for (let key in SETTING.TARGET) {
    * ------------------------------
    */
   gulp.task(`${key}Style`, function() {
-  	gulp.src([`${SETTING.CORE}${SETTING.STYLE}/${key}/*.scss`]).
+    gulp.src([`${SETTING.CORE}${SETTING.STYLE}/${key}/*.scss`]).
       pipe(plumberWithNotify()).
       pipe(using()).
-      pipe(cached('style')).
-      pipe(compass({
-        project: __dirname,
-        config_file: './config.rb',
-        comments: false,
-        css: `${SETTING.DIST}${value}/${SETTING.CSS}/`,
-        sass: `${SETTING.CORE}${SETTING.STYLE}/${key}/`,
-        image: `${SETTING.DIST}${value}/${SETTING.IMAGES}/`,
-        javascript: `${SETTING.DIST}${value}/${SETTING.JS}/`,
-        font: `${SETTING.DIST}${value}/${SETTING.FONT}/`,
-      }));
+      pipe(cached(`${key}Style`)).
+      pipe(sass().on('error', sass.logError)).
+      pipe(postcss([
+        autoprefixer({
+          browsers: SUPPORT_BROWSERS,
+          cascade: true
+        }),
+        mqpacker,
+        csswring
+      ])).
+      pipe(gulp.dest(`${SETTING.DIST}${value}/${SETTING.CSS}/`));
   });
 
   /**
@@ -159,7 +184,8 @@ gulp.task('watch', ['server'], function() {
   }
 });
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['indexStyle']);
+// gulp.task('default', ['watch']);
 
 gulp.task('build', function() {
   for (let key in SETTING.TARGET) {

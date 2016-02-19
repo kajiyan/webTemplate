@@ -14,17 +14,23 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
 
   result.MODE = defaults.mode.toUpperCase();
 
-  const PRODUCTION_PROTOCOL  = 'http';
-  const PRODUCTION_HOST      = 'www.godiva-surprise-messenger.com';
-  const PRODUCTION_PORT      = 80;
+  const PRODUCTION_PROTOCOL    = 'http';
+  const PRODUCTION_HOST        = 'imgsrc.co.jp';
+  const PRODUCTION_PORT        = 80;
+  const PRODUCTION_SOCKET_HOST = '';
+  const PRODUCTION_SOCKET_PORT = 8080;
 
-  const DEBUG_PROTOCOL       = 'http';
-  const DEBUG_HOST           = 'godiva2016.imgsrc.co.jp';
-  const DEBUG_PORT           = 80;
+  const DEBUG_PROTOCOL         = 'http';
+  const DEBUG_HOST             = 'dev.imgsrc.co.jp';
+  const DEBUG_PORT             = 80;
+  const DEBG_SOCKET_HOST       = 'dev.imgsrc.co.jp';
+  const DEBG_SOCKET_PORT       = 8010;
 
-  const DEBUG_LOCAL_PROTOCOL = 'http';
-  const DEBUG_LOCAL_HOST     = 'localhost';
-  const DEBUG_LOCAL_PORT     = 3000;
+  const DEBUG_LOCAL_PROTOCOL    = 'http';
+  const DEBUG_LOCAL_HOST        = 'localhost';
+  const DEBUG_LOCAL_PORT        = 3000;
+  const DEBUG_LOCAL_SOCKET_HOST = 'localhost';
+  const DEBUG_LOCAL_SOCKET_PORT = 8010;
 
   result.COMMON  = 'common';
   result.IMAGES  = 'images';
@@ -43,6 +49,8 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
       result.BASE_URL = '//' + PRODUCTION_HOST + '/';
       result.BASE_PATH = '';
       result.COMMON_BASE_PATH = `/${result.COMMON}/`;
+      result.SOCKET_HOST = PRODUCTION_SOCKET_HOST;
+      result.SOCKET_PORT = PRODUCTION_SOCKET_PORT;
     },
     DEBUG () {
       result.FB_APP_ID = '000000000000000';
@@ -52,6 +60,8 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
       result.BASE_URL = '//' + DEBUG_HOST + '/';
       result.BASE_PATH = '';
       result.COMMON_BASE_PATH = `/${result.COMMON}/`;
+      result.SOCKET_HOST = DEBG_SOCKET_HOST;
+      result.SOCKET_PORT = DEBG_SOCKET_PORT;
     },
     DEBUG_LOCAL() {
       result.FB_APP_ID = '000000000000000';
@@ -61,6 +71,8 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
       result.BASE_URL = '//' + DEBUG_LOCAL_HOST + '/';
       result.BASE_PATH = '';
       result.COMMON_BASE_PATH = `/${result.COMMON}/`;
+      result.SOCKET_HOST = DEBUG_LOCAL_SOCKET_HOST;
+      result.SOCKET_PORT = DEBUG_LOCAL_SOCKET_PORT;
     }
   };
 
@@ -83,7 +95,7 @@ export default function ( options = { mode: 'DEBUG_LOCAL' } ) {
       urlSet[result.MODE]('DEBUG_LOCAL');
     }
 
-    console.log('Front End Setting | /system/gulp/setting.js');
+    console.log('Front End Setting | /system/setting.js');
   } else {
     result.TARGET = {
       index: ''

@@ -2,18 +2,18 @@
     State
    ========================================================================== */
 .is-debug {
-  @include box-shadow(rgb(255, 255, 255) 0px 0px 0px 1px inset);
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 1px inset;
   background-color: rgba(204, 204, 204, 0.05);
   * {
-		@include box-shadow(rgb(255, 255, 255) 0px 0px 0px 1px inset);
+		box-shadow: rgb(255, 255, 255) 0px 0px 0px 1px inset;
     background-color: rgba(204, 204, 204, 0.05);
 	}
 
   .is-debug--none {
-    @include box-shadow(none);
+    box-shadow: none;
     background-color: transparent;
     * {
-      @include box-shadow(none);
+      box-shadow: none;
       background-color: transparent;
     }    
   }
@@ -38,7 +38,7 @@
 }
 
 .is-invisibility {
-  @include opacity(0.0);
+  opacity: 0.0;
 }
 
 .is-transparent {
@@ -46,41 +46,95 @@
   color: transparent;
 }
 
-.is-mp-small-visible {
+
+
+.is-mpl-block-show {
   display: none;
-  @include mq-small {
+  @include mqLarge {
     display: block;
   }
 }
 
-.is-mp-small-hidden {
+.is-mpl-block-hide {
   display: block;
-  @include mq-small {
+  @include mqLarge {
+    display: none;
+  }
+}
+
+.is-mpl-inline-show {
+  display: none;
+  @include mqLarge {
+    display: inline;
+  }
+}
+
+.is-mpl-inline-hide {
+  display: inline;
+  @include mqLarge {
     display: none;
   }
 }
 
 
 
-%clearfix {
-
+.is-mpm-block-show {
+  display: none;
+  @include mqMiddle {
+    display: block;
+  }
 }
 
-// %clearfix {
-//   overflow: none;
-//   *zoom: 1;
-// }
+.is-mpm-block-hide {
+  display: block;
+  @include mqMiddle {
+    display: none;
+  }
+}
 
-// aside, footer {
-//   @extend %clearfix;
-// }
+.is-mpm-inline-show {
+  display: none;
+  @include mqMiddle {
+    display: inline;
+  }
+}
 
-// #grid-container {
-//   @extend %clearfix;
-// }
+.is-mpm-inline-hide {
+  display: inline;
+  @include mqMiddle {
+    display: none;
+  }
+}
 
-// //こうなる
-// aside, footer, #grid-container {
-//   overflow: none;
-//   *zoom: 1;
-// }
+
+
+.is-mps-block-show {
+  display: none;
+  @include mqSmall {
+    display: block;
+  }
+}
+
+.is-mps-block-hide {
+  display: block;
+  @include mqSmall {
+    display: none;
+  }
+}
+
+.is-mps-inline-show {
+  display: none;
+  @include mqSmall {
+    display: inline;
+  }
+}
+
+.is-mps-inline-hide {
+  display: inline;
+  @include mqSmall {
+    display: none;
+  }
+}
+
+%clearfix {
+}
