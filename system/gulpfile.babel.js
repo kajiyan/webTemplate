@@ -16,8 +16,6 @@ import postcss from 'gulp-postcss';
 import autoprefixer from 'autoprefixer';
 import mqpacker from 'css-mqpacker';
 import csswring from 'csswring';
-// import autoprefixer from 'gulp-autoprefixer';
-// import compass from 'gulp-compass';
 import plumber from 'gulp-plumber';
 import notify from 'gulp-notify';
 import using from 'gulp-using';
