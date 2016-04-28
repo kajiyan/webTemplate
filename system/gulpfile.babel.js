@@ -24,7 +24,7 @@ import runSequence from 'run-sequence';
 import minimist from 'minimist';
 import path from 'path';
 
-
+let BrowserSync = browserSync.create();
 let env = minimist(process.argv.slice(2))
 
 const SETTING = setting((function() {
@@ -145,7 +145,7 @@ for (let i = 0, len = SETTING.PAGES.length; i < len; i++) {
  */
 gulp.task('server', function() {
   if (SETTING.MODE === 'DEBUG_LOCAL' && SETTING.PORT !== 80) {
-    browserSync({
+    BrowserSync.init({
       startPath: './index.html',
       port: `${SETTING.PORT}`,
       server: {
@@ -167,14 +167,14 @@ gulp.task('watch', ['server'], function() {
       [`${name}TemplateEngine`]
     );
     gulp.watch(`${SETTING.APPLICATION_DIST}${dir}*.html`).
-      on('change', browserSync.reload)
+      on('change', BrowserSync.reload)
 
     gulp.watch(
       [`${SETTING.CORE}${SETTING.STYLE}/${name}/*.scss`],
       [`${name}Style`]
     );
     gulp.watch(`${SETTING.APPLICATION_DIST}${dir}${SETTING.CSS}/*.css`).
-      on('change', browserSync.reload)
+      on('change', BrowserSync.reload)
 
     gulp.watch(
       [
@@ -186,7 +186,7 @@ gulp.task('watch', ['server'], function() {
       [`${name}Webpack`]
     );
     gulp.watch(`${SETTING.APPLICATION_DIST}${dir}${SETTING.JS}/*.js`).
-      on('change', browserSync.reload)
+      on('change', BrowserSync.reload)
   }
 });
 
@@ -202,13 +202,3 @@ gulp.task('build', function() {
     runSequence(`${name}TemplateEngine`, `${name}Style`, `${name}Webpack`);
   }
 });
-
-
-
-
-
-
-
-
-
-
