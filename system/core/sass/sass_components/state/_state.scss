@@ -2,11 +2,11 @@
     State
    ========================================================================== */
 .is-debug {
-  box-shadow: rgb(255, 255, 255) 0px 0px 0px 1px inset;
-  background-color: rgba(204, 204, 204, 0.05);
+  box-shadow: rgb(0, 0, 0) 0px 0px 0px 1px inset;
+  background-color: rgba(204, 204, 204, 0.25);
   * {
-		box-shadow: rgb(255, 255, 255) 0px 0px 0px 1px inset;
-    background-color: rgba(204, 204, 204, 0.05);
+		box-shadow: rgb(0, 0, 0) 0px 0px 0px 1px inset;
+    background-color: rgba(204, 204, 204, 0.25);
 	}
 
   .is-debug--none {
@@ -134,7 +134,4 @@
   @include mqSmall {
     display: none;
   }
-}
-
-%clearfix {
 }

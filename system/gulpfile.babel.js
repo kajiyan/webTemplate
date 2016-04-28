@@ -2,8 +2,6 @@
 // gulp build --ENV -m DEBUG
 // gulp build --ENV -m DEBUG_LOCAL
 
-// require('babel-core/register');
-
 import webpackConfig from './webpack.config';
 import setting from './setting';
 
@@ -20,9 +18,6 @@ import plumber from 'gulp-plumber';
 import notify from 'gulp-notify';
 import using from 'gulp-using';
 import cached from 'gulp-cached';
-
-import jsdoc from 'gulp-jsdoc';
-
 import watch from 'gulp-watch';
 import browserSync from 'browser-sync';
 import runSequence from 'run-sequence';
@@ -37,17 +32,23 @@ const SETTING = setting((function() {
 })());
 
 const SUPPORT_BROWSERS = [
-  'ie >= 9',
+  'ie >= 8',
   'ie_mob >= 10',
   'ff >= 20',
   'chrome >= 34',
   'safari >= 7',
   'opera >= 23',
-  'ios >= 7',
-  'android >= 2.3',
+  'ios >= 8',
+  'android >= 4.0',
   'and_ff >= 20',
   'and_chr >= 34'
 ];
+
+
+console.log('Builder End Setting | /system/gulp/setting.js');
+console.log(`MODE: ${SETTING.MODE}`);
+console.log(`HOST: ${SETTING.HOST} | PORT: ${SETTING.PORT}`);
+
 
 /* ------------------------------ */
 let plumberWithNotify = function() {
@@ -57,29 +58,30 @@ let plumberWithNotify = function() {
 };
 
 
-for (let key in SETTING.TARGET) {
-	let value = SETTING.TARGET[key];
+for (let i = 0, len = SETTING.PAGES.length; i < len; i++) {
+  let name = SETTING.PAGES[i].name;
+  let dir = SETTING.PAGES[i].dir;
 
-	/**
+  /**
    * ------------------------------
    * HTML TEMPLATE
    * ------------------------------
    */
-  gulp.task(`${key}TemplateEngine`, function() {
+  gulp.task(`${name}TemplateEngine`, function() {
     let options = {
       data: SETTING,
       defaults: { cache: false }
     }
 
-    gulp.src([`${SETTING.CORE}${SETTING.ENGINE}/${key}/*.${SETTING.ENGINE_ATTRIBUTE}.html`]).
+    gulp.src([`${SETTING.CORE}${SETTING.ENGINE}/${name}/index.${SETTING.ENGINE_ATTRIBUTE}.html`]).
       pipe(plumberWithNotify()).
       pipe(using()).
-      pipe(cached('swig')).
+      // pipe(cached('swig')).
       pipe(swig(options)).
       pipe(rename(function(filePath) {
         filePath.basename = path.basename(filePath.basename, `.${SETTING.ENGINE_ATTRIBUTE}`);
       })).
-      pipe(gulp.dest(`${SETTING.APPLICATION_DIST}${value}`));
+      pipe(gulp.dest(`${SETTING.APPLICATION_DIST}${dir}`));
   });
 
   /**
@@ -87,11 +89,11 @@ for (let key in SETTING.TARGET) {
    * STYLE
    * ------------------------------
    */
-  gulp.task(`${key}Style`, function() {
-    gulp.src([`${SETTING.CORE}${SETTING.STYLE}/${key}/*.scss`]).
+  gulp.task(`${name}Style`, function() {
+    gulp.src([`${SETTING.CORE}${SETTING.STYLE}/${name}/*.scss`]).
       pipe(plumberWithNotify()).
       pipe(using()).
-      pipe(cached(`${key}Style`)).
+      pipe(cached(`${name}Style`)).
       pipe(sass().on('error', sass.logError)).
       pipe(postcss([
         autoprefixer({
@@ -101,7 +103,7 @@ for (let key in SETTING.TARGET) {
         mqpacker,
         csswring
       ])).
-      pipe(gulp.dest(`${SETTING.APPLICATION_DIST}${value}/${SETTING.CSS}/`));
+      pipe(gulp.dest(`${SETTING.APPLICATION_DIST}${dir}/${SETTING.CSS}/`));
   });
 
   /**
@@ -109,66 +111,31 @@ for (let key in SETTING.TARGET) {
    * WEB PACK
    * ------------------------------
    */
-  gulp.task(`${key}Webpack`, function(){
-  	gulp.src([
-      `${SETTING.CORE}${SETTING.ALT_JS}/${key}/*.${SETTING.ALT_JS_ATTRIBUTE}`,
-      `${SETTING.CORE}${SETTING.ALT_JS}/${key}/**/*.${SETTING.ALT_JS_ATTRIBUTE}`
+  gulp.task(`${name}Webpack`, function(){
+   gulp.src([
+      `${SETTING.CORE}${SETTING.ALT_JS}/${name}/*.${SETTING.ALT_JS_ATTRIBUTE}`,
+      `${SETTING.CORE}${SETTING.ALT_JS}/${name}/**/*.${SETTING.ALT_JS_ATTRIBUTE}`
     ]).
     pipe(plumberWithNotify()).
     pipe(using()).
     pipe(cached('webpack')).
-    pipe(webpack(webpackConfig(key, SETTING))).
-    pipe(gulp.dest(`${SETTING.APPLICATION_DIST}${value}/${SETTING.JS}`));
+    pipe(webpack(webpackConfig(name, SETTING))).
+    pipe(gulp.dest(`${SETTING.APPLICATION_DIST}${dir}/${SETTING.JS}`));
   });
+
 
 
   /**
    * ------------------------------
-   * JS DOC
-   * ------------------------------
-   */
-  gulp.task(`${key}JsDoc`, function(){
-    gulp.
-      src([
-        `${SETTING.CORE}${SETTING.ALT_JS}/${key}/**/*.${SETTING.ALT_JS_ATTRIBUTE}`,
-        `${SETTING.ROOT}README.md`
-      ]).
-      pipe(jsdoc.parser(
-        {
-          name: `${key}JsDoc`,
-          version: '1.0.0'
-        }
-      )).
-      pipe(jsdoc.generator(`${SETTING.DOCS_DIST}`,
-        {
-          // テンプレートプラグイン「ink-docstrap」を使用する
-          path: 'ink-docstrap',
-          // プロジェクト名 ページタイトル・ヘッダーの左上に表示される
-          systemName: 'Web Template',
-          // HTMLのスタイルテーマ
-          // cerulean, cosmo, cyborg, darkly, flatly, journal, lumen, paper, readable, sandstone, simplex, slate, spacelab, superhero, united, yeti
-          theme: 'cosmo',
-          // ソースコードに行番号を表示するかどうか
-          linenums: true
-        },
-        {
-          // ソースコードを記述したHTMLを生成するかどうか
-          outputSourceFiles: true
-        }
-      ));
-  });
-
-
-  /**
-	 * ------------------------------
    * File watching
-	 * ------------------------------
+   * ------------------------------
    */
-  console.log(`========== ${key}: ${value} ==========`);
-  console.log(`[${SETTING.ENGINE}]\n  TARGET:\n    ${SETTING.CORE}${SETTING.ENGINE}/${key}/*.${SETTING.ENGINE_ATTRIBUTE}.html\n  TASK:\n    ${key}TemplateEngine`);
-	console.log(`[${SETTING.STYLE}]\n  TARGET:\n    ${SETTING.CORE}${SETTING.STYLE}/${key}/*.scss\n  TASK:\n    ${key}Style`);
-	console.log(`[webpack]\n  TARGET:\n    ${SETTING.CORE}${SETTING.ALT_JS}/${key}/*.coffee\n    ${SETTING.CORE}${SETTING.ALT_JS}/${key}/**/*.coffee\n    ${SETTING.CORE}${SETTING.ALT_JS}/${key}/*.babel.js\n    ${SETTING.CORE}${SETTING.ALT_JS}/${key}/**/*.babel.js\n  TASK:\n    ${key}Webpack`);
+  console.log(`========== ${name}: ${dir} ==========`);
+  console.log(`[${SETTING.ENGINE}]\n  TARGET:\n    ${SETTING.CORE}${SETTING.ENGINE}/${name}/*.${SETTING.ENGINE_ATTRIBUTE}.html\n  TASK:\n    ${name}TemplateEngine`);
+  console.log(`[${SETTING.STYLE}]\n  TARGET:\n    ${SETTING.CORE}${SETTING.STYLE}/${name}/*.scss\n  TASK:\n    ${name}Style`);
+  console.log(`[webpack]\n  TARGET:\n    ${SETTING.CORE}${SETTING.ALT_JS}/${name}/*.coffee\n    ${SETTING.CORE}${SETTING.ALT_JS}/${name}/**/*.coffee\n    ${SETTING.CORE}${SETTING.ALT_JS}/${name}/*.babel.js\n    ${SETTING.CORE}${SETTING.ALT_JS}/${name}/**/*.babel.js\n  TASK:\n    ${name}Webpack`);
 }
+
 
 
 /**
@@ -189,56 +156,52 @@ gulp.task('server', function() {
 });
 
 
+
 gulp.task('watch', ['server'], function() {
-  for (let key in SETTING.TARGET) {
-    let value = SETTING.TARGET[key];
-    
+  for (let i = 0, len = SETTING.PAGES.length; i < len; i++) {
+    let name = SETTING.PAGES[i].name;
+    let dir = SETTING.PAGES[i].dir;
+
     gulp.watch(
-      [`${SETTING.CORE}${SETTING.ENGINE}/${key}/*.${SETTING.ENGINE_ATTRIBUTE}.html`],
-      [`${key}TemplateEngine`]
+      [`${SETTING.CORE}${SETTING.ENGINE}/${name}/*.${SETTING.ENGINE_ATTRIBUTE}.html`],
+      [`${name}TemplateEngine`]
     );
-    gulp.watch(`${SETTING.APPLICATION_DIST}${value}*.html`).
+    gulp.watch(`${SETTING.APPLICATION_DIST}${dir}*.html`).
       on('change', browserSync.reload)
 
     gulp.watch(
-      [`${SETTING.CORE}${SETTING.STYLE}/${key}/*.scss`],
-      [`${key}Style`]
+      [`${SETTING.CORE}${SETTING.STYLE}/${name}/*.scss`],
+      [`${name}Style`]
     );
-    gulp.watch(`${SETTING.APPLICATION_DIST}${value}/${SETTING.CSS}/*.css`).
+    gulp.watch(`${SETTING.APPLICATION_DIST}${dir}${SETTING.CSS}/*.css`).
       on('change', browserSync.reload)
 
     gulp.watch(
       [
-        `${SETTING.CORE}${SETTING.ALT_JS}/${key}/*.coffee`,
-        `${SETTING.CORE}${SETTING.ALT_JS}/${key}/**/*.coffee`,
-        `${SETTING.CORE}${SETTING.ALT_JS}/${key}/*.babel.js`,
-        `${SETTING.CORE}${SETTING.ALT_JS}/${key}/**/*.babel.js`
+        `${SETTING.CORE}${SETTING.ALT_JS}/${name}/*.coffee`,
+        `${SETTING.CORE}${SETTING.ALT_JS}/${name}/**/*.coffee`,
+        `${SETTING.CORE}${SETTING.ALT_JS}/${name}/*.babel.js`,
+        `${SETTING.CORE}${SETTING.ALT_JS}/${name}/**/*.babel.js`
       ],
-      [`${key}Webpack`]
+      [`${name}Webpack`]
     );
-    gulp.watch(`${SETTING.APPLICATION_DIST}${value}/${SETTING.JS}/*.js`).
+    gulp.watch(`${SETTING.APPLICATION_DIST}${dir}${SETTING.JS}/*.js`).
       on('change', browserSync.reload)
   }
 });
 
+
 gulp.task('default', ['watch']);
 
-gulp.task('doc', function() {
-  for (let key in SETTING.TARGET) {
-    runSequence(`${key}JsDoc`);
-  }
-});
 
 gulp.task('build', function() {
-  for (let key in SETTING.TARGET) {
-    runSequence(`${key}TemplateEngine`, `${key}Style`, `${key}Webpack`);
+  for (let i = 0, len = SETTING.PAGES.length; i < len; i++) {
+    let name = SETTING.PAGES[i].name;
+    let dir = SETTING.PAGES[i].dir;
+
+    runSequence(`${name}TemplateEngine`, `${name}Style`, `${name}Webpack`);
   }
 });
-
-
-
-
-    
 
 
 

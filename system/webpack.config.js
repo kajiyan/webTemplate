@@ -36,22 +36,24 @@ export default function (target, setting) {
         { test: /\.mp3$/, loader: "file" },
         // { test: /angular\.js$/, loader: 'exports?angular' },
         { 
-          test: /\.babel\.js$/,
+          test: /\.js$/,
           exclude: /node_modules/,
+          // loader: ['babel?cacheDirectory']
           loader: 'babel'
         },
       ]
     },
     resolve: {
       root: [
+        path.join(__dirname),
         path.join(__dirname, SETTING.APP_COMPONENTS),
         path.join(__dirname, SETTING.NODE_MODULES),
-        path.join(__dirname, SETTING.BOWER_COMPONENTS)
+        // path.join(__dirname, SETTING.BOWER_COMPONENTS)
       ],
       moduleDirectories: [
         SETTING.APP_COMPONENTS,
         SETTING.NODE_MODULES,
-        SETTING.BOWER_COMPONENTS
+        // SETTING.BOWER_COMPONENTS
       ],
       extensions: ['', '.js', '.coffee', '.babel.js']
     },
@@ -59,15 +61,13 @@ export default function (target, setting) {
       root: [
         path.join(__dirname, SETTING.APP_COMPONENTS),
         path.join(__dirname, SETTING.NODE_MODULES),
-        path.join(__dirname, SETTING.BOWER_COMPONENTS)
+        // path.join(__dirname, SETTING.BOWER_COMPONENTS)
       ]
     },
     plugins: (function() {
       let result = [
-        new BowerWebpackPlugin(),
+        // new BowerWebpackPlugin(),
         new webpack.ProvidePlugin({
-          jQuery: 'jquery',
-          $: 'jquery',
           _: 'lodash',
           Backbone: 'backbone',
           Modernizr: 'modernizr/modernizr',

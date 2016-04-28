@@ -6,8 +6,5 @@ import 'babel-polyfill';
 
 	document.addEventListener('DOMContentLoaded', function() {
 		console.log('DOMContentLoaded');
-
-    console.log($);
-
 	}, false);
 })();
