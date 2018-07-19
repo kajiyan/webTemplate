@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+  	"experimentalDecorators": true,
+    "jsx": "react",
+  	"lib": ["dom", "es5", "es2015"],
+    "listFiles": true,
+    "locale": "ja",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "watch": false
+  },
+	"exclude": [
+		"node_modules"
+	],
+  "filesGlob": [
+  	"**/*.ts",
+  	"**/*.tsx",
+  	"**/*.d.ts"
+  ]
+}
