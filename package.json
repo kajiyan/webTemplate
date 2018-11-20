@@ -1,0 +1,49 @@
+{
+  "name": "webTemplate",
+  "version": "1.0.0",
+  "description": "web development.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kajiyan/web-boilerplate.git"
+  },
+  "engines": {
+    "npm": ">=5",
+    "node": ">=8"
+  },
+  "author": "Hiroki Kajiya",
+  "license": "MIT",
+  "scripts": {
+    "local:dev:server": "NODE_ENV=development node server",
+    "local:dev:template": "NODE_ENV=development node internals/pug",
+    "global:dev:template": "NODE_ENV=development node internals/pug --location=global",
+    "global:pro:template": "NODE_ENV=production node internals/pug"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/register": "^7.0.0",
+    "browser-sync": "^2.26.3",
+    "chalk": "^2.4.1",
+    "config": "^2.0.1",
+    "cross-env": "^5.2.0",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.22.2",
+    "pm2": "^3.2.2",
+    "pug": "^2.0.3"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "browsers": [
+              "last 2 versions",
+              "not dead"
+            ]
+          }
+        }
+      ]
+    ]
+  }
+}
