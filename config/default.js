@@ -33,6 +33,7 @@ module.exports = (() => {
   result.ALT_JS_ATTRIBUTE = '.ts';
 
   // assets dir name
+  result.CONFIG = 'config';
   result.SHARED = 'shared';
   result.IMAGES = 'images';
   result.CSS = 'css';

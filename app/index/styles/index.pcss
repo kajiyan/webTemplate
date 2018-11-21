@@ -1,0 +1,50 @@
+@custom-media --narrow-window (max-width: 30em);
+
+:root {
+  --main-font-size: 16px;
+  --color: red;
+}
+
+$test: 20;
+
+%container {
+  padding: 15px;
+}
+
+body {
+  @extend %container;
+  @mixin lerp
+    '{"property": "font-size", "min": { "view": 400, "to": $test }, "max": { "view": 800, "to": 30 }}';
+
+  content: $LOCATION;
+  margin: $test;
+  height: auto;
+
+  div {
+    width: 100%;
+    width: cacl(100 + 100);
+    margin-bottom: calc(100% + 100%);
+    margin-top: 1rem;
+  }
+
+  @media (--narrow-window) {
+    background-color: #f3f3f3f3;
+    margin-top: 1rem;
+  }
+}
+
+h1 {
+  color: var(--color);
+}
+
+form:focus-within {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+em {
+  background-color: hsl(120deg 100% 25%);
+  box-shadow: 0 0 0 10px hwb(120deg 100% 25% / 80%);
+  color: rgb(0 255 0);
+  position: fixed 0 0 *;
+  transition: all 600ms ease-in-sine;
+}
