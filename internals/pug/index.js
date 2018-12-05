@@ -71,10 +71,15 @@ const readdir = function(searchDir) {
 
 fs.access(BUILD_DIR_PATH, (err) => {
   if (err) {
+    // 書き出し先のディレクトリがない場合ディレクトリを作成する
+    mkdirp(BUILD_DIR_PATH);
+
+    /*
     // 書き出し先のディレクトリがない場合はエラーメッセージを出力して終了
     console.error(chalk.red(err.message));
     process.exit(1);
     return;
+    */
   }
 
   const REG_EXP = new RegExp(`^${APP_DIR_PATH}|index|/${config.TEMPLATE_ENGINE_FOLDER_NAME}`, 'g');
