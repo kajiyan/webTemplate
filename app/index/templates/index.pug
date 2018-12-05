@@ -1,4 +1,14 @@
 extends /_layout/_default
+
+block CONSTANTS
+  -
+    PAGE = {
+      DIR: '/child-page'
+    };
+
 block main
   main
-    h1 Hello World
+    section
+      h1 Title
+      div
+        a(href='https://github.com/kajiyan/webTemplate' target="_blank") Git Repository

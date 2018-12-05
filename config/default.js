@@ -1,9 +1,17 @@
+const path = require('path');
+const browserslist = require('browserslist');
+const pkg = require(path.resolve(process.cwd(), 'package.json'));
+
 module.exports = (() => {
   let result = {};
+
+  // https://browserl.ist/?q=%3E0.25%25%2C+ie+11%2C+not+op_mini+all%2C+not+Opera+55
+  result.BROWSERS = browserslist(pkg.browserslist);
 
   result.LOCATION = 'local';
 
   result.ROOT = '';
+  result.APP_NS = 'ims';
   result.APP_DIR_NAME = 'app';
   result.APP_DIR_PATH = `${ result.ROOT }${ result.APP_DIR_NAME }/`;
   result.BUILD_DIR_NAME = 'htdocs';
@@ -14,7 +22,7 @@ module.exports = (() => {
   result.BASE_PATH = '';
   result.PORT = 8080;
 
-  result.BASE_URL = `//${ result.HOST + (result.PORT === 80 ? '' : ':' + result.PORT) }`;
+  result.BASE_URL = `${ result.PROTOCOL }://${ result.HOST + (result.PORT === 80 ? '' : ':' + result.PORT) }`;
   result.GA_TRACKING_ID = 'UA-xxxxxxxxx-x';
 
   // template engine
@@ -34,6 +42,7 @@ module.exports = (() => {
 
   // assets dir name
   result.CONFIG = 'config';
+  result.ASSETS = 'assets';
   result.SHARED = 'shared';
   result.IMAGES = 'images';
   result.CSS = 'css';

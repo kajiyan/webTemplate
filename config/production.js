@@ -12,7 +12,7 @@ module.exports = (() => {
   result.LOCAL_BASE_PATH = '';
   result.LOCAL_BASE_PATH = 80;
 
-  result.BASE_URL = `//${ result.HOST + (result.PORT === 80 ? '' : ':' + result.PORT) }`;
+  result.BASE_URL = `${ result.PROTOCOL }//${ result.HOST + (result.PORT === 80 ? '' : ':' + result.PORT) }`;
   result.GA_TRACKING_ID = 'UA-xxxxxxxxx-x';
 
   return result;
