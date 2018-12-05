@@ -58,5 +58,27 @@ module.exports = (() => {
   result.SHARED_AUDIO = `${result.BASE_PATH}/${result.SHARED}/${result.AUDIO}`;
   result.SHARED_VIDEO = `${result.BASE_PATH}/${result.SHARED}/${result.VIDEO}`;
 
+  // Base Window Size (px)
+  result.xLargeScreenWidth = 1280;
+  result.xLargeScreenGutterWidth = 60;
+  result.xLargeScreenContainerWidth = result.xLargeScreenWidth - (result.xLargeScreenGutterWidth * 2);
+
+  result.largeScreenWidth = 980;
+  result.largeScreenGutterWidth = 60;
+  result.largeScreenContainerWidth = result.largeScreenWidth - (result.largeScreenGutterWidth * 2);
+
+  result.mediumScreenWidth = 767;
+  result.mediumScreenGutterWidth = 60;
+  result.mediumScreenContainerWidth = result.mediumScreenWidth - (result.mediumScreenGutterWidth * 2);
+
+  result.smallScreenWidth = 480;
+  result.smallScreenGutterWidth = 20;
+  result.smallScreenContainerWidth = result.smallScreenWidth - (result.smallScreenGutterWidth * 2);
+
+  result.spDesignWidth = 375;
+  result.spDesignMinWidth = 320;
+  result.spDesignGutterWidth = 36;
+  result.spDesignInnerWidth = result.spDesignWidth - (result.spDesignGutterWidth * 2);
+
   return result;
 })();

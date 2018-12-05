@@ -11,7 +11,7 @@ const mkdirp = require('mkdirp');
 const moment = require('moment');
 
 const APP_DIR_PATH = path.join(process.cwd(), config.APP_DIR_PATH);
-const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH);
+const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH, config.ASSETS);
 
 /**
  * writeFile
@@ -21,15 +21,15 @@ const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH);
  * @param {string} data 書き込むCSS文字列
  * @returns {Promise} rejectの場合はErrorが、resolveの場合は空が返る
  */
-let writeFile = function(file, data) {
+let writeFile = (file, data) => {
   return new Promise((resolve, reject) => {
-    mkdirp(path.dirname(file), function(err) {
+    mkdirp(path.dirname(file), err => {
       if (err) {
         reject(err);
         return;
       }
 
-      fs.writeFile(file, data, function(err) {
+      fs.writeFile(file, data, err => {
         if (err) {
           reject(err);
           return;
@@ -47,9 +47,9 @@ let writeFile = function(file, data) {
  * @returns {Promise} rejectの場合はErrorが、
  *                    resolveの場合は読み込んだファイルのstring[]あるいはBuffer[]が返る
  */
-const readdir = function(searchDir) {
+const readdir = searchDir => {
   return new Promise((resolve, reject) => {
-    fs.readdir(searchDir, function(err, files) {
+    fs.readdir(searchDir, (err, files) => {
       if (err) {
         reject(err);
         return;
@@ -70,14 +70,14 @@ const readdir = function(searchDir) {
  * @returns {Promise} rejectの場合はErrorが、
  *                    resolveの場合は読み込んだファイルのstringあるいはBufferが返る
  */
-let readFile = function(file) {
+let readFile = file =>  {
   return new Promise((resolve, reject) => {
     fs.readFile(
       file,
       {
         encoding: 'utf-8'
       },
-      function(err, data) {
+      (err, data) => {
         if (err) {
           reject(err);
           return;
@@ -97,7 +97,7 @@ let readFile = function(file) {
  * @param {object} keydata.css コンパイル前のCSSの文字列
  * @return {Promise} resolveの場合は変換後のCSSの文字列を返す
  */
-const compileStyle = function(keydata) {
+const compileStyle = keydata =>  {
   return new Promise((resolve, reject) => {
     postcssrc(keydata.config).then(
       ({ plugins, options }) => {
@@ -119,23 +119,22 @@ const compileStyle = function(keydata) {
   });
 };
 
-fs.access(BUILD_DIR_PATH, function(error) {
-  if (error) {
-    // 書き出し先のディレクトリがない場合の処理
-    console.error(chalk.red(error.message));
-    return;
+fs.access(BUILD_DIR_PATH, err => {
+  if (err) {
+    // 書き出し先のディレクトリがない場合ディレクトリを作成する
+    mkdirp(BUILD_DIR_PATH);
   }
 
   let regExp = new RegExp(`^${APP_DIR_PATH}|index|/${config.STYLE_FOLDER_NAME}`, 'g');
   let extRegExp = new RegExp(`${config.STYLE_ATTRIBUTE.replace(new RegExp(/\./, 'g'), '\\.')}$`);
-  let ignoreRegExp = (function() {
+  let ignoreRegExp = (() => {
     let result = new RegExp(`^${config.STYLE_IGNORE_PREFIX.join('|^')}`);
     return result;
   })();
 
-  glob(`${APP_DIR_PATH}**/${config.STYLE_FOLDER_NAME}/`, {}, function(error, dirs) {
-    if (error) {
-      console.error(chalk.red(error.message));
+  glob(`${APP_DIR_PATH}**/${config.STYLE_FOLDER_NAME}/`, {}, (err, dirs) => {
+    if (err) {
+      console.error(chalk.red(err.message));
       return;
     }
 
@@ -189,9 +188,9 @@ fs.access(BUILD_DIR_PATH, function(error) {
                         console.log(chalk.green(`✔︎ Compiled Style ${distFile} (${diffTime}ms)`));
 
                         return Promise.resolve();
-                      })().catch(error => {
+                      })().catch(err => {
                         console.log(chalk.red(`✖︎ Compile Error ${distFile})`));
-                        console.error(error);
+                        console.error(err);
                       });
                     })
                     .on('unlink', path => {
@@ -237,8 +236,8 @@ fs.access(BUILD_DIR_PATH, function(error) {
           }
 
           return Promise.resolve();
-        })().catch(error => {
-          console.error(chalk.red(error.message));
+        })().catch(err => {
+          console.error(chalk.red(err.message));
           return;
         });
       })(path.normalize(`${dirs[i]}/`));

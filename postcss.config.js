@@ -1,10 +1,6 @@
 const path = require('path');
-const browserslist = require('browserslist');
 const config = require('config');
 const stylelint = require('stylelint');
-
-// https://browserl.ist/?q=%3E0.25%25%2C+ie+11%2C+not+op_mini+all%2C+not+Opera+55
-const browsers = browserslist('>0.25%, ie 11, not op_mini all, not Opera 55');
 
 module.exports = ctx => ({
   map: ctx.env === 'production' ? false : { inline: true },
@@ -14,6 +10,13 @@ module.exports = ctx => ({
   from: ctx.from,
   to: ctx.to,
   plugins: {
+    'stylelint': {},
+    'postcss-import': (() => {
+      let result = {};
+      result.path = [config.APP_DIR_NAME];
+      result.plugins = [stylelint()];
+      return result;
+    })(),
     'postcss-custom-properties': {},
     'postcss-simple-vars': {
       silent: true,
@@ -21,15 +24,10 @@ module.exports = ctx => ({
     },
     'postcss-calc': {},
     'doiuse': {
-      'browsers': browsers
+      'browsers': config.BROWSERS,
+      'ignore': ['css-touch-action', 'user-select-none', 'pointer', 'outline'],
+      'ignoreFiles': ['**/_sanitize.pcss']
     },
-    'stylelint': {},
-    'postcss-import': (() => {
-      let result = {};
-      result.path = ['src'];
-      result.plugins = [stylelint()];
-      return result;
-    })(),
     // 'postcss-short': {},
     // 'postcss-apply': {},
     'postcss-easings': {},
@@ -56,7 +54,7 @@ module.exports = ctx => ({
     'postcss-nested': {},
     'postcss-preset-env': {
       'stage': 2,
-      'browsers': browsers,
+      'browsers': config.BROWSERS,
       'features': {
         'all-property': true,
         'functional-color-notation': true,
