@@ -10,7 +10,7 @@ module.exports = (() => {
   result.PROTOCOL = 'http';
   result.HOST = 'hirokikajiya.com';
   result.LOCAL_BASE_PATH = '';
-  result.LOCAL_BASE_PATH = 80;
+  result.PORT = 80;
 
   result.BASE_URL = `${ result.PROTOCOL }//${ result.HOST + (result.PORT === 80 ? '' : ':' + result.PORT) }`;
   result.GA_TRACKING_ID = 'UA-xxxxxxxxx-x';
