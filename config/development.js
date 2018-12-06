@@ -18,6 +18,8 @@ module.exports = (() => {
     result.PORT = 80;
 
     result.BASE_URL = `${ result.PROTOCOL }//${ result.HOST + (result.PORT === 80 ? '' : ':' + result.PORT) }`;
+
+    result.HOT_RELOAD = false;
   }
 
   return result;

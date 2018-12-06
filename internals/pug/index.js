@@ -83,7 +83,7 @@ fs.access(BUILD_DIR_PATH, (err) => {
   }
 
   const REG_EXP = new RegExp(`^${APP_DIR_PATH}|index|/${config.TEMPLATE_ENGINE_FOLDER_NAME}`, 'g');
-  const EXT_REG_EXP = new RegExp(`${config.TEMPLATE_ENGINE_ATTRIBUTE.replace(new RegExp(/\./, 'g'), '\\.')}$`);
+  const EXT_REG_EXP = new RegExp(`${config.TEMPLATE_ENGINE_ATTRIBUTE.join('|').replace(new RegExp(/\./, 'g'), '\\.')}$`);
   const IGNORE_REG_EXP = new RegExp(`^${config.TEMPLATE_ENGINE_IGNORE_PREFIX.join('|^')}`);
 
   glob(`${APP_DIR_PATH}**/${config.TEMPLATE_ENGINE_FOLDER_NAME}`, {}, (err, dirs) => {

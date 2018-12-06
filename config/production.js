@@ -15,5 +15,7 @@ module.exports = (() => {
   result.BASE_URL = `${ result.PROTOCOL }//${ result.HOST + (result.PORT === 80 ? '' : ':' + result.PORT) }`;
   result.GA_TRACKING_ID = 'UA-xxxxxxxxx-x';
 
+  result.HOT_RELOAD = false;
+
   return result;
 })();

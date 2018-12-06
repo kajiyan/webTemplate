@@ -1,6 +1,5 @@
 const path = require('path');
 const config = require('config');
-const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const saveLicense = require('uglify-save-license');
 
@@ -8,11 +7,6 @@ const APP_DIR_PATH = path.join(process.cwd(), config.APP_DIR_PATH);
 
 module.exports = require('./webpack.base.babel')({
   mode: 'production',
-  entry: {
-    'index': [
-      path.join(APP_DIR_PATH, 'index/scripts/index.js')
-    ]
-  },
   devtool: false,
   plugins: [],
   optimization: {
@@ -20,7 +14,7 @@ module.exports = require('./webpack.base.babel')({
       cacheGroups: {
         vendor: {
           test: /node_modules/,
-          name: `${config.SHARED}/${config.JS}/vendor`,
+          name: `${config.ASSETS}/${config.SHARED}/${config.JS}/vendor`,
           chunks: 'initial',
           enforce: true
         }
@@ -28,7 +22,8 @@ module.exports = require('./webpack.base.babel')({
     },
     minimizer: [
       new UglifyJsPlugin({
-        parallel: true,
+        // parallel を指定すると 'ERROR in {filename}.js from UglifyJs' というエラーが出力される
+        // parallel: true,
         uglifyOptions: {
           output: {
             comments: saveLicense

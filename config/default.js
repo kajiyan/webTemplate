@@ -28,17 +28,17 @@ module.exports = (() => {
   // template engine
   result.TEMPLATE_ENGINE_IGNORE_PREFIX = ['_', 'ignore'];
   result.TEMPLATE_ENGINE_FOLDER_NAME = 'templates';
-  result.TEMPLATE_ENGINE_ATTRIBUTE = '.pug';
+  result.TEMPLATE_ENGINE_ATTRIBUTE = ['.pug'];
 
   // style sheet
   result.STYLE_IGNORE_PREFIX = ['_', 'ignore'];
   result.STYLE_FOLDER_NAME = 'styles';
-  result.STYLE_ATTRIBUTE = '.pcss';
+  result.STYLE_ATTRIBUTE = ['.pcss'];
 
   // script
   result.ALT_JS_IGNORE_PREFIX = ['_', 'ignore'];
   result.ALT_JS_FOLDER_NAME = 'scripts';
-  result.ALT_JS_ATTRIBUTE = '.ts';
+  result.ALT_JS_ATTRIBUTE = ['.js', '.jsx', '.ts', '.tsx'];
 
   // assets dir name
   result.CONFIG = 'config';
@@ -57,6 +57,8 @@ module.exports = (() => {
   result.SHARED_FONTS = `${result.BASE_PATH}/${result.SHARED}/${result.FONTS}`;
   result.SHARED_AUDIO = `${result.BASE_PATH}/${result.SHARED}/${result.AUDIO}`;
   result.SHARED_VIDEO = `${result.BASE_PATH}/${result.SHARED}/${result.VIDEO}`;
+
+  result.HOT_RELOAD = true;
 
   // Base Window Size (px)
   result.xLargeScreenWidth = 1280;

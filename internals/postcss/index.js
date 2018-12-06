@@ -126,7 +126,7 @@ fs.access(BUILD_DIR_PATH, err => {
   }
 
   let regExp = new RegExp(`^${APP_DIR_PATH}|index|/${config.STYLE_FOLDER_NAME}`, 'g');
-  let extRegExp = new RegExp(`${config.STYLE_ATTRIBUTE.replace(new RegExp(/\./, 'g'), '\\.')}$`);
+  let extRegExp = new RegExp(`${config.STYLE_ATTRIBUTE.join('|').replace(new RegExp(/\./, 'g'), '\\.')}$`);
   let ignoreRegExp = (() => {
     let result = new RegExp(`^${config.STYLE_IGNORE_PREFIX.join('|^')}`);
     return result;

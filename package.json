@@ -14,8 +14,8 @@
     "not Opera 55"
   ],
   "engines": {
-    "npm": ">=5",
-    "node": ">=8"
+    "npm": ">=6",
+    "node": ">=10"
   },
   "license": "MIT",
   "private": true,
@@ -25,6 +25,7 @@
     "global:dev:template": "NODE_ENV=development node internals/pug --location=global",
     "global:pro:template": "NODE_ENV=production node internals/pug",
     "global:dev:scripts": "NODE_ENV=development node internals/webpack --location=global",
+    "global:pro:scripts": "NODE_ENV=production node internals/webpack",
     "local:dev:styles": "NODE_ENV=development node internals/postcss",
     "global:dev:styles": "NODE_ENV=development node internals/postcss --location=global",
     "global:pro:styles": "NODE_ENV=production node internals/postcss",
