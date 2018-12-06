@@ -167,6 +167,34 @@ module.exports = (options) => {
             ]
           },
           {
+            test: /\.ts$|\.tsx$/,
+            exclude: /^_.*\.ts$|\^_.*\.tsx$|node_modules/,
+            use: [
+              {
+                loader: 'babel-loader',
+                options: {
+                  presets: [
+                    [
+                      '@babel/preset-env',
+                      {
+                        targets: {
+                          // node: 'current',
+                          browsers: config.BROWSERS
+                        },
+                        modules: false,
+                        useBuiltIns: 'usage'
+                      }
+                    ]
+                  ],
+                  cacheDirectory: true
+                }
+              },
+              {
+                loader: 'ts-loader'
+              }
+            ]
+          },
+          {
             test: /\.js$|\.jsx$/,
             exclude: /node_modules/,
             use: [
