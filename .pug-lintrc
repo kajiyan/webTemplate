@@ -1,0 +1,39 @@
+{
+  "disallowHtmlText": true,
+  "disallowMultipleLineBreaks": true,
+  "disallowSpecificAttributes": [],
+  "disallowSpecificTags": [
+    "hgroup",
+    "keygen",
+    "menu",
+    "menuitem",
+    "shadow",
+    "u"
+  ],
+  "disallowLegacyMixinCall" : true,
+  "maximumNumberOfLines": 30,
+  "requireClassLiteralsBeforeIdLiterals": true,
+  "requireIdLiteralsBeforeAttributes": true,
+  "requireLineFeedAtFileEnd": true,
+  "requireLowerCaseAttributes": true,
+  "requireLowerCaseTags": true,
+  "disallowClassLiteralsBeforeAttributes" : true,
+  "requireSpaceAfterCodeOperator": true,
+  "disallowClassLiteralsBeforeIdLiterals" : true,
+  "requireSpecificAttributes": [
+    { "abbr": "title" },
+    { "html": "lang" },
+    { "meter": [ "min", "max" ]},
+    { "progress": "max" },
+    { "img" : [ "alt" ]},
+    { "input" : ["name", "type"]}
+  ],
+  "requireStrictEqualityOperators": true,
+  "validateAttributeQuoteMarks": "'",
+  "validateAttributeSeparator": {
+    "separator": ", ",
+    "multiLineSeparator": ",\n"
+  },
+  "validateDivTags": true,
+  "validateIndentation": 2
+}

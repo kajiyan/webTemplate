@@ -32,7 +32,8 @@
     "lint:staged": "lint-staged",
     "lint:styles": "stylelint \"**/*.pcss\"",
     "lint:styles:fix": "stylelint --fix",
-    "watch": "run-p local:dev:*"
+    "watch": "run-p local:dev:*",
+    "test": "pug-lint --config /Users/kj/Documents/projects/webTemplate/.pug-lintrc --reporter console /Users/kj/Documents/projects/webTemplate/app/index/templates/index.pug"
   },
   "lint-staged": {
     "*.pcss": [
@@ -94,6 +95,9 @@
     "pre-commit": "^1.2.2",
     "prettier": "^1.15.3",
     "pug": "^2.0.3",
+    "pug-lint": "^2.5.0",
+    "puglint-stylish": "^0.1.1",
+    "shelljs": "^0.8.3",
     "stylelint": "^9.8.0",
     "stylelint-config-standard": "^18.2.0",
     "ts-loader": "^5.3.1",

@@ -7,9 +7,11 @@ const glob = require('glob');
 const mkdirp = require('mkdirp');
 const moment = require('moment');
 const pug = require('pug');
+const shell = require('shelljs');
 
 const APP_DIR_PATH = path.join(process.cwd(), config.APP_DIR_PATH);
 const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH);
+const LINT_CONFIG_FILE_PATH = path.join(process.cwd(), '.pug-lintrc');
 
 const options = {
   config,
@@ -69,6 +71,25 @@ const readdir = function(searchDir) {
   });
 };
 
+/**
+ * lint
+ * pug ファイルをlint する
+ * @param {string} file lint するファイルまでのパスを表現する文字列
+ * @returns {Promise} rejectの場合はErrorが、
+ *                    resolveの場合は読み込んだファイルのstring[]あるいはBuffer[]が返る
+ */
+const lint = (file) => {
+  return new Promise((resolve, reject) => {
+    shell.exec(`pug-lint --reporter node_modules/puglint-stylish --config ${ LINT_CONFIG_FILE_PATH } ${ file }`, { silent: true }, (code, stdout) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(stdout));
+      }
+    });
+  });
+};
+
 fs.access(BUILD_DIR_PATH, (err) => {
   if (err) {
     // 書き出し先のディレクトリがない場合ディレクトリを作成する
@@ -113,12 +134,15 @@ fs.access(BUILD_DIR_PATH, (err) => {
                   watcher
                     .on('change', path => {
                       console.log(chalk.green(`✔︎ Update Template ${path}`));
+
                       (async () => {
                         const compileStartTime = moment();
 
+                        await lint(file);
+
                         const html = pug.renderFile(file, options);
 
-                        await writeFile(distFile, html);
+                        await writeFile(distFile, html)
 
                         const diffTime = moment().diff(compileStartTime);
 
