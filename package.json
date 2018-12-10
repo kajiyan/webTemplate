@@ -32,14 +32,20 @@
     "lint:staged": "lint-staged",
     "lint:styles": "stylelint \"**/*.pcss\"",
     "lint:styles:fix": "stylelint --fix",
-    "watch": "run-p local:dev:*",
-    "test": "pug-lint --config /Users/kj/Documents/projects/webTemplate/.pug-lintrc --reporter console /Users/kj/Documents/projects/webTemplate/app/index/templates/index.pug"
+    "lint:scripts": "eslint \"app\" --ext .js,.jsx,tsx,.ts --config .eslintrc.js --ignore-path .gitignore --ignore-pattern internals",
+    "lint:scripts:fix": "eslint \"app\" --ext .js,.jsx,tsx,.ts --config .eslintrc.js --ignore-path .gitignore --ignore-pattern internals --fix",
+    "watch": "run-p local:dev:*"
   },
   "lint-staged": {
     "*.pcss": [
       "yarn run lint:styles:fix",
       "git add --force"
-    ]
+    ],
+    "*.ts": [
+      "yarn run lint:scripts:fix",
+      "git add --force"
+    ],
+    "ignore": ["@types"]
   },
   "pre-commit": "lint:staged",
   "devDependencies": {
