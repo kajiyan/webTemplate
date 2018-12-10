@@ -41,7 +41,8 @@ html(id=`js-${config.APP_NS}` class=`${config.APP_NS}` lang='ja')
 
       link(rel='stylesheet', href=`/${config.ASSETS}/${config.SHARED}/${config.CSS}/index.css`)
       link(rel='stylesheet', href=`/${config.ASSETS}${PAGE.DIR}/${config.CSS}/index.css`)
-      script(src=`/${config.ASSETS}/${config.SHARED}/${config.JS}/vendor.js`  defer)
+      script(src=`/${config.ASSETS}/${config.SHARED}/${config.JS}/vendor.chunk.js` defer)
+      script(src=`/${config.ASSETS}/${config.SHARED}/${config.JS}/index.js` defer)
       script(src=`/${config.ASSETS}${PAGE.DIR}/${config.JS}/index.js` defer)
 
   body(class=`${config.APP_NS}-Body`)

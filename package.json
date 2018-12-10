@@ -107,6 +107,17 @@
     "whatwg-fetch": "^3.0.0"
   },
   "dependencies": {
-    "modernizr": "^3.6.0"
+    "deepmerge": "^3.0.0",
+    "detect-it": "^3.0.5",
+    "fontfaceobserver": "^2.1.0",
+    "gsap": "^2.0.2",
+    "in-view": "^0.6.1",
+    "lazysizes": "^4.1.5",
+    "modernizr": "^3.6.0",
+    "perfect-scrollbar": "^1.4.0",
+    "swiper": "^4.4.2",
+    "throttle-debounce": "^2.0.1",
+    "ua-parser-js": "^0.7.19",
+    "vanilla-modal": "^1.6.5"
   }
 }

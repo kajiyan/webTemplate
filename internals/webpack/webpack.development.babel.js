@@ -7,6 +7,17 @@ module.exports = require('./webpack.base.babel')({
   mode: 'development',
   devtool: 'eval-source-map',
   plugins: [],
-  optimization: {},
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: `${config.ASSETS}/${config.SHARED}/${config.JS}/vendor`,
+          chunks: 'initial',
+          enforce: true
+        }
+      }
+    }
+  },
   performance: { hints: false }
 });
