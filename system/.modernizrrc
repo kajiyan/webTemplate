@@ -1,6 +1,0 @@
-{
-  "minify": true,
-  "classPrefix": "",
-  "options": ["setClasses"],
-  "feature-detects": ["css/calc"]
-}
