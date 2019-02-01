@@ -13,6 +13,8 @@ const moment = require('moment');
 const APP_DIR_PATH = path.join(process.cwd(), config.APP_DIR_PATH);
 const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH, config.ASSETS);
 
+let sep = process.platform === 'win32' ? '\\' : '/';
+
 /**
  * writeFile
  * PostCSSによって生成されたCSS文字列を対象のファイルに書き込む
@@ -21,7 +23,7 @@ const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH, config.AS
  * @param {string} data 書き込むCSS文字列
  * @returns {Promise} rejectの場合はErrorが、resolveの場合は空が返る
  */
-let writeFile = (file, data) => {
+const writeFile = (file, data) => {
   return new Promise((resolve, reject) => {
     mkdirp(path.dirname(file), err => {
       if (err) {
@@ -70,7 +72,7 @@ const readdir = searchDir => {
  * @returns {Promise} rejectの場合はErrorが、
  *                    resolveの場合は読み込んだファイルのstringあるいはBufferが返る
  */
-let readFile = file =>  {
+const readFile = file =>  {
   return new Promise((resolve, reject) => {
     fs.readFile(
       file,
@@ -125,14 +127,11 @@ fs.access(BUILD_DIR_PATH, err => {
     mkdirp(BUILD_DIR_PATH);
   }
 
-  let regExp = new RegExp(`^${APP_DIR_PATH}|index|/${config.STYLE_FOLDER_NAME}`, 'g');
-  let extRegExp = new RegExp(`${config.STYLE_ATTRIBUTE.join('|').replace(new RegExp(/\./, 'g'), '\\.')}$`);
-  let ignoreRegExp = (() => {
-    let result = new RegExp(`^${config.STYLE_IGNORE_PREFIX.join('|^')}`);
-    return result;
-  })();
+  const regExp = new RegExp(`^${APP_DIR_PATH}|index|${sep}${config.STYLE_FOLDER_NAME}`.replace(/\\/g, '\\\\'), 'g');
+  const extRegExp = new RegExp(`${config.STYLE_ATTRIBUTE.join('|').replace(new RegExp(/\./, 'g'), '\\.')}$`);
+  const ignoreRegExp = new RegExp(`^${config.STYLE_IGNORE_PREFIX.join('|^')}`.replace(/\\/g, '\\\\'));
 
-  glob(`${APP_DIR_PATH}**/${config.STYLE_FOLDER_NAME}/`, {}, (err, dirs) => {
+  glob(`${APP_DIR_PATH}**/${config.STYLE_FOLDER_NAME}`, {}, (err, dirs) => {
     if (err) {
       console.error(chalk.red(err.message));
       return;
@@ -141,18 +140,18 @@ fs.access(BUILD_DIR_PATH, err => {
     for (let i = 0, dirsLen = dirs.length; i < dirsLen; i++) {
       (dir => {
         (async () => {
-          let files = await readdir(dir);
+          const files = await readdir(dir);
 
           for (let j = 0, filesLen = files.length; j < filesLen; j++) {
-            let file = files[j];
-            let fileInfo = path.parse(files[j]);
+            const file = files[j];
+            const fileInfo = path.parse(files[j]);
 
             // コンパイルするべきファイルか拡張子とファイル名から判断する、初期設定は「.pcss」
             if (!extRegExp.test(fileInfo.base) || ignoreRegExp.test(fileInfo.base)) {
               continue;
             }
 
-            const distFile = `${path.join(BUILD_DIR_PATH, dir.replace(regExp, ''))}${config.CSS}/${fileInfo.base.replace(extRegExp, '')}.css`;
+            const distFile = `${path.join(BUILD_DIR_PATH, dir.replace(regExp, ''))}${config.CSS}${sep}${fileInfo.base.replace(extRegExp, '')}.css`;
 
             const postcssConfig = createPostcssConfig({
               // map: { inline: true },
@@ -163,7 +162,7 @@ fs.access(BUILD_DIR_PATH, err => {
             });
 
             if (process.env.NODE_ENV === 'development' && config.LOCATION === 'local') {
-              let createWatcher = (() => {
+              const createWatcher = (() => {
                 const watcher = chokidar.watch(file);
 
                 return () => {
@@ -238,6 +237,7 @@ fs.access(BUILD_DIR_PATH, err => {
           return Promise.resolve();
         })().catch(err => {
           console.error(chalk.red(err.message));
+          process.exit(1);
           return;
         });
       })(path.normalize(`${dirs[i]}/`));
