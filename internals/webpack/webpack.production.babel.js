@@ -3,12 +3,25 @@ const config = require('config');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const saveLicense = require('uglify-save-license');
 
-const APP_DIR_PATH = path.join(process.cwd(), config.APP_DIR_PATH);
+// const APP_DIR = path.join(process.cwd(), config.APP_DIR_PATH);
+const tsConfigFile = path.resolve(process.cwd(), 'tsconfig.json');
+const tsLintConfigFile = path.resolve(process.cwd(), 'tslint.json');
 
 module.exports = require('./webpack.base.babel')({
+  bail: true,
   mode: 'production',
   devtool: false,
-  plugins: [],
+  plugins: (() => {
+    let results = [
+      new ForkTsCheckerWebpackPlugin({
+        async: false,
+        tsconfig: tsConfigFile,
+        tslint: tsLintConfigFile
+      })
+    ];
+
+    return results;
+  })(),
   optimization: {
     splitChunks: {
       cacheGroups: {

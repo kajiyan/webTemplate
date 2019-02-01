@@ -1,35 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import { Switch, Route } from 'react-router';
-import configureStore, { history } from './store';
+console.log(CONFIG);
 
-import HomePage from './containers/HomePage';
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import { AppContainer } from 'react-hot-loader';
+// import { Provider } from 'react-redux';
+// import { ConnectedRouter } from 'connected-react-router';
+// import { Switch, Route } from 'react-router';
+// import configureStore, { history } from './store';
 
-import Root from './containers/Root';
+// import HomePage from './containers/HomePage';
 
-const store = configureStore();
+// import Root from './containers/Root';
 
-console.log(store.getState());
+// const store = configureStore();
 
-ReactDOM.render(
-  <AppContainer>
-    <Root store={store} history={history} />
-  </AppContainer>,
-  document.getElementById('root')
-);
+// console.log(store.getState());
 
-if (module.hot) {
-  module.hot.accept('./containers/Root', () => {
-    // eslint-disable-next-line global-require
-    const NextRoot = require('./containers/Root').default;
-    ReactDOM.render(
-      <AppContainer>
-        <NextRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('root')
-    );
-  });
-}
+// ReactDOM.render(
+//   <AppContainer>
+//     <Root store={store} history={history} />
+//   </AppContainer>,
+//   document.getElementById('root')
+// );
+
+// if (module.hot) {
+//   module.hot.accept('./containers/Root', () => {
+//     // eslint-disable-next-line global-require
+//     const NextRoot = require('./containers/Root').default;
+//     ReactDOM.render(
+//       <AppContainer>
+//         <NextRoot store={store} history={history} />
+//       </AppContainer>,
+//       document.getElementById('root')
+//     );
+//   });
+// }

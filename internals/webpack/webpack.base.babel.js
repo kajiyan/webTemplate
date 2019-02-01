@@ -4,14 +4,21 @@ const chalk = require('chalk');
 const config = require('config');
 const glob = require('glob');
 const webpack = require('webpack');
+const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
-const APP_DIR_PATH = path.join(process.cwd(), config.APP_DIR_PATH);
-const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH, config.ASSETS);
+const APP_DIR = path.join(process.cwd(), config.APP_DIR_PATH);
+const BUILD_DIR = path.join(process.cwd(), config.BUILD_DIR_PATH, config.ASSETS);
+
+const NODE_MODULES_DIR = path.resolve(process.cwd(), 'node_modules');
+const modernizrConfigFile = path.resolve(process.cwd(), '.modernizrrc');
+const tsConfigFile = path.resolve(process.cwd(), 'tsconfig.json');
 
 let sep = process.platform === 'win32' ? '\\' : '/';
 
-const entryRegExp = new RegExp(`^${APP_DIR_PATH}|index${sep}|${config.ALT_JS_FOLDER_NAME}${sep}`.replace(/\\/g, '\\\\'), 'g');
+const entryRegExp = new RegExp(`^${APP_DIR}|index${sep}|${config.ALT_JS_FOLDER_NAME}${sep}`.replace(/\\/g, '\\\\'), 'g');
 const extRegExp = new RegExp(`${config.ALT_JS_ATTRIBUTE.join('$|').replace(new RegExp(/\./, 'g'), '\\.')}$`);
 const ignoreRegExp = new RegExp(`^${config.ALT_JS_IGNORE_PREFIX.join('|^')}`.replace(/\\/g, '\\\\'));
 
@@ -19,7 +26,7 @@ const ignoreRegExp = new RegExp(`^${config.ALT_JS_IGNORE_PREFIX.join('|^')}`.rep
  * readdir
  * @param {string|Buffer|URL} searchDir 読み込むファイルまでのパスを表現する文字列
  * @returns {Promise} rejectの場合はErrorが、
- *                    resolveの場合は読み込んだファイルのstring[]あるいはBuffer[]が返る
+ *                    resolveの場合は読み込んだファイルのstring[] あるいはBuffer[] が返る
  */
 const readdir = searchDir => {
   return new Promise((resolve, reject) => {
@@ -41,9 +48,9 @@ const readdir = searchDir => {
 module.exports = (options) => {
   try {
     // 書き出し先のディレクトリが存在するか
-    fs.accessSync(BUILD_DIR_PATH);
+    fs.accessSync(BUILD_DIR);
 
-    const dirs = glob.sync(`${APP_DIR_PATH}/**/${config.ALT_JS_FOLDER_NAME}`);
+    const dirs = glob.sync(`${APP_DIR}/**/${config.ALT_JS_FOLDER_NAME}`);
     let entry = {}
 
     // コンパイルの対象となるディレクトリがない場合 Error を throw する
@@ -85,15 +92,14 @@ module.exports = (options) => {
       externals: {}, // グローバル（外部）を参照させたいライブラリ
       output: Object.assign(
         {
-          path: BUILD_DIR_PATH,
+          path: BUILD_DIR,
           publicPath: '/',
           filename: '[name].js',
           chunkFilename: '[name].chunk.js',
           sourceMapFilename: '[name].map',
           jsonpFunction: config.APP_NS,
-          devtoolModuleFilenameTemplate: info => {
-            return path.resolve(info.absoluteResourcePath).replace(/\\/g, '/');
-          }
+          devtoolModuleFilenameTemplate: info =>
+            path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')
         },
         options.output,
       ),
@@ -106,7 +112,9 @@ module.exports = (options) => {
             }),
             new webpack.DefinePlugin({
               CONFIG: JSON.stringify(config)
-            })
+            }),
+            new CaseSensitivePathsPlugin(),
+            new WatchMissingNodeModulesPlugin(NODE_MODULES_DIR)
           ];
 
           if (config.HOT_RELOAD) {
@@ -125,54 +133,81 @@ module.exports = (options) => {
         })()
       ),
       module: {
+        // モジュールがexport されていなければエラーにする
+        strictExportPresence: true,
+        // 各ローダーの設定 指定した配列の後ろからローダーが適応される
+        // oneOf 内は記述順に処理される
         rules: [
           {
-            test: /\.(js|jsx)$/,
-            exclude: /node_modules/,
-            use: [
+            oneOf: [
               {
-                loader: 'babel-loader',
-                options: {
-                //   presets: [
-
-                //     [
-                //       '@babel/preset-env',
-                //       {
-                //         targets: {
-                //           // node: 'current',
-                //           browsers: config.BROWSERS
-                //         },
-                //         // modules: false,
-                //         // useBuiltIns: 'usage'
-                //       }
-                //     ]
-                //   ],
-                //   plugins: [
-                //     // 'transform-flow-strip-types',
-                //     [
-                //       'flow-runtime',
-                //       {
-                //         'assert': true,
-                //         'annotate': true
-                //       }
-                //     ]
-                //   ],
-                  cacheDirectory: true
-                }
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: [
+                  {
+                    loader: 'babel-loader',
+                    options: {
+                      presets: [
+                        [
+                          '@babel/preset-env',
+                          {
+                            targets: {
+                              browsers: config.BROWSERS
+                            },
+                            modules: false,
+                            useBuiltIns: 'usage'
+                          }
+                        ]
+                      ],
+                      cacheDirectory: true
+                    }
+                  }
+                ]
+              },
+              {
+                test: /\.(ts|tsx)$/,
+                include: APP_DIR,
+                use: [
+                  {
+                    loader: 'ts-loader',
+                    options: {
+                      transpileOnly: true
+                    }
+                  }
+                ]
+              },
+              {
+                test: /\.(css|pcss)$/,
+                use: [
+                  'style-loader',
+                  {
+                    loader: 'css-loader',
+                    options: {
+                      importLoaders: 1,
+                      modules: true
+                    }
+                  },
+                  {
+                    loader: 'postcss-loader',
+                    options: {
+                      ident: 'postcss'
+                    }
+                  }
+                ]
               }
+              // {
+              //   test: /\.js$|\.jsx$|\.ts$|\.tsx$/,
+              //   enforce: 'pre',
+              //   exclude: /\^_.js$|\^_.jsx$|\^_.ts$|\^_.tsx$|node_modules/,
+              //   use: [
+              //     {
+              //       loader: 'eslint-loader'
+              //       // options: { fix: true }
+              //     }
+              //   ]
+              // },
             ]
           },
-          // {
-          //   test: /\.js$|\.jsx$|\.ts$|\.tsx$/,
-          //   enforce: 'pre',
-          //   exclude: /\^_.js$|\^_.jsx$|\^_.ts$|\^_.tsx$|node_modules/,
-          //   use: [
-          //     {
-          //       loader: 'eslint-loader'
-          //       // options: { fix: true }
-          //     }
-          //   ]
-          // },
           {
             test: /\.modernizrrc$/,
             loader: 'modernizr-loader!json-loader'
@@ -181,10 +216,15 @@ module.exports = (options) => {
       },
       resolve: {
         alias: {
-          modernizr$: path.resolve(process.cwd(), '.modernizrrc')
+          modernizr$: modernizrConfigFile
         },
-        extensions: ['.js', '.jsx'],
-        modules: ['node_modules', 'app']
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        modules: ['node_modules', 'app'],
+        plugins: [
+          new TsconfigPathsPlugin({
+            configFile: tsConfigFile
+          })
+        ]
       },
       optimization: Object.assign(
         {

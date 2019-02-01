@@ -2,13 +2,26 @@ const path = require('path');
 const config = require('config');
 const stylelint = require('stylelint');
 
-module.exports = ctx => ({
-  map: ctx.env === 'production' ? false : { inline: true },
-  parser: ctx.parser ? 'sugarss' : false,
-  // syntax: ctx.syntax ? ctx.syntax : undefined,
-  // stringifier: ctx.options.stringifier ? ctx.stringifier : undefined,
-  from: ctx.from,
-  to: ctx.to,
+module.exports = (ctx) => ({
+  ident: 'postcss',
+  map: process.env.NODE_ENV === 'production' ? false : { inline: true },
+  parser: (() => {
+    if (typeof ctx.parser !== 'undefined') return ctx.parser;
+    if (typeof ctx.options.parser !== 'undefined') return ctx.options.parser;
+    return undefined
+  })(),
+  syntax: (() => {
+    if (typeof ctx.syntax !== 'undefined') return ctx.syntax;
+    if (typeof ctx.options.syntax !== 'undefined') return ctx.options.syntax;
+    return undefined
+  })(),
+  stringifier: (() => {
+    if (typeof ctx.stringifier !== 'undefined') return ctx.stringifier;
+    if (typeof ctx.options.stringifier !== 'undefined') return ctx.options.stringifier;
+    return undefined
+  })(),
+  from: typeof ctx.from !== 'undefined' ? ctx.from : undefined,
+  to: typeof ctx.to !== 'undefined' ? ctx.to : undefined,
   plugins: {
     'stylelint': {},
     'postcss-import': (() => {
@@ -49,7 +62,6 @@ module.exports = ctx => ({
         }
       }
     },
-    // 'postcss-calc': {},
     // 'postcss-color-function': {},
     'postcss-nested': {},
     'postcss-preset-env': {
@@ -68,7 +80,7 @@ module.exports = ctx => ({
     'postcss-sorting': {},
     'pixrem': {},
     'css-mqpacker': {},
-    'cssnano': ctx.env === 'production' ? { autoprefixer: false, normalizeUrl: false, zindex: false } : false,
+    'cssnano': process.env.NODE_ENV === 'production' ? { autoprefixer: false, normalizeUrl: false, zindex: false } : false,
     'postcss-reporter': { clearReportedMessages: true }
   }
 });

@@ -154,9 +154,9 @@ fs.access(BUILD_DIR_PATH, err => {
             const distFile = `${path.join(BUILD_DIR_PATH, dir.replace(regExp, ''))}${config.CSS}${sep}${fileInfo.base.replace(extRegExp, '')}.css`;
 
             const postcssConfig = createPostcssConfig({
-              // map: { inline: true },
-              env: process.env.NODE_ENV,
               parser: false,
+              syntax: false,
+              stringifier: false,
               from: file,
               to: distFile
             });

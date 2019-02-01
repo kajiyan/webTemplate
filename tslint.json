@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**/*.ts",
+      "postcss.config.js",
+      "internals",
+      "server"
+    ]
+  },
+  "rules": {
+    "no-console": [false]
+  },
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ]
+}
