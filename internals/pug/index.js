@@ -1,22 +1,24 @@
-const fs = require("fs");
-const path = require("path");
-const chalk = require("chalk");
-const chokidar = require("chokidar");
-const config = require("config");
-const glob = require("glob");
-const mkdirp = require("mkdirp");
-const moment = require("moment");
-const pug = require("pug");
-const shell = require("shelljs"); // lint 関数内で pug-lint, puglint-stylish 呼ぶ
+const fs = require('fs');
+const path = require('path');
+const chalk = require('chalk');
+const chokidar = require('chokidar');
+const config = require('config');
+const glob = require('glob');
+const mkdirp = require('mkdirp');
+const moment = require('moment');
+const pug = require('pug');
+const shell = require('shelljs'); // lint 関数内で pug-lint, puglint-stylish 呼ぶ
 
 const APP_DIR_PATH = path.join(process.cwd(), config.APP_DIR_PATH);
 const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH);
-const LINT_CONFIG_FILE_PATH = path.join(process.cwd(), ".pug-lintrc");
+const LINT_CONFIG_FILE_PATH = path.join(process.cwd(), '.pug-lintrc');
+
+let sep = process.platform === 'win32' ? '\\' : '/';
 
 const options = {
   config,
   basedir: APP_DIR_PATH,
-  cache: process.env.NODE_ENV === "production",
+  cache: process.env.NODE_ENV === 'production',
   pretty: true
 };
 
@@ -52,7 +54,7 @@ let writeFile = function(file, data) {
  * readdir
  * @param {string|Buffer|URL} searchDir 読み込むファイルまでのパスを表現する文字列
  * @returns {Promise} rejectの場合はErrorが、
- *                    resolveの場合は読み込んだファイルのstring[]あるいはBuffer[]が返る
+ *                    resolveの場合は読み込んだファイルのstring[] あるいはBuffer[] が返る
  */
 const readdir = function(searchDir) {
   return new Promise((resolve, reject) => {
@@ -108,9 +110,10 @@ fs.access(BUILD_DIR_PATH, err => {
   }
 
   const REG_EXP = new RegExp(
-    `^${APP_DIR_PATH}|index|/${config.TEMPLATE_ENGINE_FOLDER_NAME}`,
+    `^${APP_DIR_PATH}|index|${sep}${config.TEMPLATE_ENGINE_FOLDER_NAME}`.replace(/\\/g, '\\\\'),
     "g"
   );
+
   const EXT_REG_EXP = new RegExp(
     `${config.TEMPLATE_ENGINE_ATTRIBUTE.join("|").replace(
       new RegExp(/\./, "g"),
@@ -118,11 +121,11 @@ fs.access(BUILD_DIR_PATH, err => {
     )}$`
   );
   const IGNORE_REG_EXP = new RegExp(
-    `^${config.TEMPLATE_ENGINE_IGNORE_PREFIX.join("|^")}`
+    `^${config.TEMPLATE_ENGINE_IGNORE_PREFIX.join("|^")}`.replace(/\\/g, '\\\\')
   );
 
   glob(
-    `${APP_DIR_PATH}**/${config.TEMPLATE_ENGINE_FOLDER_NAME}`,
+    `${APP_DIR_PATH}**${sep}${config.TEMPLATE_ENGINE_FOLDER_NAME}`,
     {},
     (err, dirs) => {
       if (err) {
@@ -146,19 +149,19 @@ fs.access(BUILD_DIR_PATH, err => {
               }
 
               if (
-                process.env.NODE_ENV === "development" &&
-                config.LOCATION === "local"
+                process.env.NODE_ENV === 'development' &&
+                config.LOCATION === 'local'
               ) {
                 const createWatcher = (() => {
                   const watcher = chokidar.watch(file);
                   const distFile = `${path.join(
                     BUILD_DIR_PATH,
-                    dir.replace(REG_EXP, "")
-                  )}${fileInfo.base.replace(EXT_REG_EXP, "")}.html`;
+                    _dir.replace(REG_EXP, '')
+                  )}${fileInfo.base.replace(EXT_REG_EXP, '')}.html`;
 
                   return () => {
                     watcher
-                      .on("change", path => {
+                      .on('change', path => {
                         console.log(chalk.green(`✔︎ Update Template ${path}`));
 
                         (async () => {
@@ -183,14 +186,14 @@ fs.access(BUILD_DIR_PATH, err => {
                           console.error(chalk.red(err.message));
                         });
                       })
-                      .on("unlink", path => {
+                      .on('unlink', path => {
                         // ファイルが削除された時の処理
                         watcher.close();
                         console.log(chalk.yellow(`✔︎ Watcher Close ${path}`));
                       })
-                      .on("error", () => {
+                      .on('error', () => {
                         watcher.close();
-                        process.kill(process.pid, "SIGHUP");
+                        process.kill(process.pid, 'SIGHUP');
                         process.exit(0);
                       });
                   };
@@ -198,15 +201,15 @@ fs.access(BUILD_DIR_PATH, err => {
 
                 createWatcher();
               } else if (
-                (process.env.NODE_ENV === "development" &&
-                  config.LOCATION === "global") ||
-                (process.env.NODE_ENV === "production" &&
-                  config.LOCATION === "global")
+                (process.env.NODE_ENV === 'development' &&
+                  config.LOCATION === 'global') ||
+                (process.env.NODE_ENV === 'production' &&
+                  config.LOCATION === 'global')
               ) {
                 (async () => {
                   const distFile = `${path.join(
                     BUILD_DIR_PATH,
-                    dir.replace(REG_EXP, "")
+                    dir.replace(REG_EXP, '')
                   )}${fileInfo.base.replace(EXT_REG_EXP, "")}.html`;
                   const compileStartTime = moment();
 
@@ -234,7 +237,7 @@ fs.access(BUILD_DIR_PATH, err => {
             process.exit(1);
             return;
           });
-        })(path.normalize(`${dir}/`));
+        })(path.normalize(`${dir}${sep}`));
       }
     }
   );
