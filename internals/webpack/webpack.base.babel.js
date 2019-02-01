@@ -9,9 +9,11 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 const APP_DIR_PATH = path.join(process.cwd(), config.APP_DIR_PATH);
 const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH, config.ASSETS);
 
-const entryRegExp = new RegExp(`^${APP_DIR_PATH}|index/|${config.ALT_JS_FOLDER_NAME}/`, 'g');
+let sep = process.platform === 'win32' ? '\\' : '/';
+
+const entryRegExp = new RegExp(`^${APP_DIR_PATH}|index${sep}|${config.ALT_JS_FOLDER_NAME}${sep}`.replace(/\\/g, '\\\\'), 'g');
 const extRegExp = new RegExp(`${config.ALT_JS_ATTRIBUTE.join('$|').replace(new RegExp(/\./, 'g'), '\\.')}$`);
-const ignoreRegExp = new RegExp(`^${config.ALT_JS_IGNORE_PREFIX.join('|^')}`);
+const ignoreRegExp = new RegExp(`^${config.ALT_JS_IGNORE_PREFIX.join('|^')}`.replace(/\\/g, '\\\\'));
 
 /**
  * readdir
@@ -33,37 +35,6 @@ const readdir = searchDir => {
 
       resolve(files);
     });
-  });
-};
-
-const getEntryFiles = function(dirs) {
-  return new Promise((resolve, reject) => {
-    let results = {};
-
-    for (let i = 0, dirsLen = dirs.length; i < dirsLen; i++) {
-      (dir => {
-        (async () => {
-          const files = await readdir(dir);
-
-          for (let j = 0, filesLen = files.length; j < filesLen; j++) {
-            const file = files[j];
-            const fileInfo = path.parse(files[j]);
-
-            // コンパイルするべきファイルか拡張子とファイル名から判断する、初期設定は「.x.js」
-            if (!extRegExp.test(fileInfo.base) || ignoreRegExp.test(fileInfo.base)) {
-              continue;
-            }
-            const entryName = `${dir.replace(entryRegExp, '')}${config.JS}/${fileInfo.base.replace(extRegExp, '')}`;
-
-            results[entryName] = file;
-          }
-
-          if (i === dirsLen - 1) {
-            resolve(results);
-          }
-        })();
-      })(path.normalize(`${dirs[i]}/`));
-    }
   });
 };
 
@@ -156,7 +127,7 @@ module.exports = (options) => {
       module: {
         rules: [
           {
-            test: /\.js$|\.jsx$/,
+            test: /\.(js|jsx)$/,
             exclude: /node_modules/,
             use: [
               {
