@@ -7,7 +7,6 @@ module.exports = {
     'airbnb',
     'prettier',
     'plugin:promise/recommended',
-    // 'plugin:flowtype/recommended'
   ],
   env: {
     browser: true,
@@ -23,7 +22,6 @@ module.exports = {
   },
   plugins: [
     'prettier',
-    'flowtype',
     'react',
     'promise',
     'compat'
