@@ -135,7 +135,12 @@ export default class SiteWide extends EventEmitter {
     interval: number;
     timer: number;
   } = {
-    eventName: 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll',
+    eventName:
+      'onwheel' in document
+        ? 'wheel'
+        : 'onmousewheel' in document
+        ? 'mousewheel'
+        : 'DOMMouseScroll',
     eventObject: {
       deltaX: 0,
       deltaY: 0,
@@ -167,9 +172,11 @@ export default class SiteWide extends EventEmitter {
     const vendors: ReadonlyArray<string> = ['ms', 'moz', 'webkit', 'o'];
 
     for (let i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
-      window.requestAnimationFrame = window[vendors[i] + 'RequestAnimationFrame'];
+      window.requestAnimationFrame =
+        window[vendors[i] + 'RequestAnimationFrame'];
       window.cancelAnimationFrame =
-        window[vendors[i] + 'CancelAnimationFrame'] || window[vendors[i] + 'CancelRequestAnimationFrame'];
+        window[vendors[i] + 'CancelAnimationFrame'] ||
+        window[vendors[i] + 'CancelRequestAnimationFrame'];
     }
 
     if (!window.requestAnimationFrame) {
@@ -210,19 +217,31 @@ export default class SiteWide extends EventEmitter {
     this._$$html.classList.add(browserDetect.browser || 'browser-unknown');
     this._$$html.classList.add(browserDetect.device || 'device-unknown');
     this._$$html.setAttribute('data-os-version', browserDetect.osVersion);
-    this._$$html.setAttribute('data-browser-version', browserDetect.browserVersion);
+    this._$$html.setAttribute(
+      'data-browser-version',
+      browserDetect.browserVersion
+    );
 
     // matchMedia のリスト
     this._mediaQuerys = new Map([
       ['SM_SCREEN_LESS', window.matchMedia('(max-width: 480px)')],
       ['MD_SCREEN_LESS', window.matchMedia('(max-width: 767px)')],
-      ['MD_SCREEN', window.matchMedia('(min-width: 481px) and (max-width: 767px)')],
+      [
+        'MD_SCREEN',
+        window.matchMedia('(min-width: 481px) and (max-width: 767px)')
+      ],
       ['MD_SCREEN_OVER', window.matchMedia('(min-width: 768px)')],
       ['LG_SCREEN_LESS', window.matchMedia('(max-width: 980px)')],
-      ['LG_SCREEN', window.matchMedia('(min-width: 769px) and (max-width: 980px)')],
+      [
+        'LG_SCREEN',
+        window.matchMedia('(min-width: 769px) and (max-width: 980px)')
+      ],
       ['LG_SCREEN_OVER', window.matchMedia('(min-width: 981px)')],
       ['XLG_SCREEN_LESS', window.matchMedia('(max-width: 1280px)')],
-      ['XLG_SCREEN', window.matchMedia('(min-width: 981px) and (max-width: 1280px)')],
+      [
+        'XLG_SCREEN',
+        window.matchMedia('(min-width: 981px) and (max-width: 1280px)')
+      ],
       ['XLG_SCREEN_OVER', window.matchMedia('(min-width: 1281px)')]
     ]);
 
@@ -285,14 +304,22 @@ export default class SiteWide extends EventEmitter {
       );
 
       // resize 時のイベントリスナー
-      window.addEventListener('resize', this.resizeHandler, detectIt.passiveEvents ? { passive: true } : false);
+      window.addEventListener(
+        'resize',
+        this.resizeHandler,
+        detectIt.passiveEvents ? { passive: true } : false
+      );
 
       // スクロールの初期値を初期化する
       this._scroll.currentScrollTop = this._scroll.element.scrollTop;
       this._scroll.eventObject.top = this._scroll.element.scrollTop;
       this._scroll.eventObject.left = this._scroll.element.scrollLeft;
       // scroll 時のイベントリスナー
-      window.addEventListener('scroll', this.scrollHandler, detectIt.passiveEvents ? { passive: true } : false);
+      window.addEventListener(
+        'scroll',
+        this.scrollHandler,
+        detectIt.passiveEvents ? { passive: true } : false
+      );
 
       // wheel 時のイベントリスナー
       window.addEventListener(
@@ -315,7 +342,10 @@ export default class SiteWide extends EventEmitter {
   public stopListening(): SiteWide {
     if (this._isInitialized && this._isListening) {
       this._isListening = false;
-      window.removeEventListener('orientationchange', this.orientationChangelHandler);
+      window.removeEventListener(
+        'orientationchange',
+        this.orientationChangelHandler
+      );
       window.removeEventListener('resize', this.resizeHandler);
       window.removeEventListener('scroll', this.scrollHandler);
       window.removeEventListener(this._wheel.eventName, this.wheelHandler);
@@ -335,11 +365,21 @@ export default class SiteWide extends EventEmitter {
 
     const uaParser = new UAParser();
 
-    const browserName: string = uaParser.getBrowser().name! ? uaParser.getBrowser().name!.toLowerCase() : '';
-    const browserVersion: string = uaParser.getBrowser().version! ? uaParser.getBrowser().version! : '';
-    const deviceType: string = uaParser.getDevice().type! ? uaParser.getDevice().type!.toLowerCase() : '';
-    const osName: string = uaParser.getOS().name! ? uaParser.getOS().name!.toLowerCase() : '';
-    const osVersion: string = uaParser.getOS().version! ? uaParser.getOS().version! : '';
+    const browserName: string = uaParser.getBrowser().name!
+      ? uaParser.getBrowser().name!.toLowerCase()
+      : '';
+    const browserVersion: string = uaParser.getBrowser().version!
+      ? uaParser.getBrowser().version!
+      : '';
+    const deviceType: string = uaParser.getDevice().type!
+      ? uaParser.getDevice().type!.toLowerCase()
+      : '';
+    const osName: string = uaParser.getOS().name!
+      ? uaParser.getOS().name!.toLowerCase()
+      : '';
+    const osVersion: string = uaParser.getOS().version!
+      ? uaParser.getOS().version!
+      : '';
 
     const result: IEnviron = {
       browser: this.format(browserName),
@@ -436,9 +476,12 @@ export default class SiteWide extends EventEmitter {
 
     // イベントトラッキングが指定されている場合の処理
     if (eventAction && eventAction.length > 0) {
-      optionalEventParams.event_category = typeof eventCategory !== 'undefined' ? eventCategory : undefined;
-      optionalEventParams.event_label = typeof eventLabel !== 'undefined' ? eventLabel : undefined;
-      optionalEventParams.value = typeof eventValue !== 'undefined' ? eventValue : undefined;
+      optionalEventParams.event_category =
+        typeof eventCategory !== 'undefined' ? eventCategory : undefined;
+      optionalEventParams.event_label =
+        typeof eventLabel !== 'undefined' ? eventLabel : undefined;
+      optionalEventParams.value =
+        typeof eventValue !== 'undefined' ? eventValue : undefined;
       optionalEventParams.event_callback =
         typeof eventCallback !== 'undefined'
           ? eventCallback
@@ -447,7 +490,9 @@ export default class SiteWide extends EventEmitter {
             };
       gtag('event', eventAction, optionalEventParams);
     } else {
-      console.log('[SiteWide] .js-gTracker には data 属性 event-action に1文字以上の文字列を指定する必要があります');
+      console.error(
+        '[SiteWide] .js-gTracker には data 属性 event-action に1文字以上の文字列を指定する必要があります'
+      );
     }
   };
 
@@ -465,7 +510,10 @@ export default class SiteWide extends EventEmitter {
       let direction: OrientationLockType;
       const deg: boolean = (window.orientation as number) % 180 === 0;
 
-      if ((deg && this._orientation.defaultOrientation) || !(deg || this._orientation.defaultOrientation)) {
+      if (
+        (deg && this._orientation.defaultOrientation) ||
+        !(deg || this._orientation.defaultOrientation)
+      ) {
         direction = 'portrait';
       } else {
         direction = 'landscape';
@@ -507,7 +555,10 @@ export default class SiteWide extends EventEmitter {
   private scrollEventEmit = (e: Event): (() => void) => {
     const handler = (): void => {
       const originalevent: Event = e;
-      this.emit('scroll', Object.assign({}, this._scroll.eventObject, { originalevent }));
+      this.emit(
+        'scroll',
+        Object.assign({}, this._scroll.eventObject, { originalevent })
+      );
       this._scroll.isTicking = false;
     };
 
@@ -544,7 +595,10 @@ export default class SiteWide extends EventEmitter {
         this._scroll.currentScrollTop = this._scroll.eventObject.top;
         this._scroll.isEnd = true;
 
-        this.emit('endScroll', Object.assign({}, this._scroll.eventObject, { originalevent }));
+        this.emit(
+          'endScroll',
+          Object.assign({}, this._scroll.eventObject, { originalevent })
+        );
       }, this._scroll.interval);
     })();
   };
@@ -578,7 +632,8 @@ export default class SiteWide extends EventEmitter {
         break;
       case 'mousewheel':
         this._wheel.eventObject.deltaY = (-1 / 40) * e.wheelDelta;
-        this._wheel.eventObject.deltaX = 'wheelDeltaX' in e ? (-1 / 40) * e.wheelDeltaX : 0;
+        this._wheel.eventObject.deltaX =
+          'wheelDeltaX' in e ? (-1 / 40) * e.wheelDeltaX : 0;
         break;
       default:
         this._wheel.eventObject.deltaY = e.detail;
@@ -587,29 +642,51 @@ export default class SiteWide extends EventEmitter {
 
     // 値が-0 の場合、0 に補正する
     this._wheel.eventObject.deltaX =
-      Math.abs(this._wheel.eventObject.deltaX) !== 0 ? this._wheel.eventObject.deltaX : 0;
+      Math.abs(this._wheel.eventObject.deltaX) !== 0
+        ? this._wheel.eventObject.deltaX
+        : 0;
     this._wheel.eventObject.deltaY =
-      Math.abs(this._wheel.eventObject.deltaY) !== 0 ? this._wheel.eventObject.deltaY : 0;
+      Math.abs(this._wheel.eventObject.deltaY) !== 0
+        ? this._wheel.eventObject.deltaY
+        : 0;
 
     // イベント時の最小値
-    this._wheel.eventObject.minDeltaX = Math.min(this._wheel.eventObject.minDeltaX, this._wheel.eventObject.deltaX);
-    this._wheel.eventObject.minDeltaY = Math.min(this._wheel.eventObject.minDeltaY, this._wheel.eventObject.deltaX);
+    this._wheel.eventObject.minDeltaX = Math.min(
+      this._wheel.eventObject.minDeltaX,
+      this._wheel.eventObject.deltaX
+    );
+    this._wheel.eventObject.minDeltaY = Math.min(
+      this._wheel.eventObject.minDeltaY,
+      this._wheel.eventObject.deltaX
+    );
 
     // イベント時の最大値
-    this._wheel.eventObject.maxDeltaX = Math.max(this._wheel.eventObject.maxDeltaX, this._wheel.eventObject.deltaY);
-    this._wheel.eventObject.maxDeltaY = Math.max(this._wheel.eventObject.maxDeltaY, this._wheel.eventObject.deltaY);
+    this._wheel.eventObject.maxDeltaX = Math.max(
+      this._wheel.eventObject.maxDeltaX,
+      this._wheel.eventObject.deltaY
+    );
+    this._wheel.eventObject.maxDeltaY = Math.max(
+      this._wheel.eventObject.maxDeltaY,
+      this._wheel.eventObject.deltaY
+    );
 
     // イベント時の合計
     this._wheel.eventObject.totalDeltaX += this._wheel.eventObject.deltaX;
     this._wheel.eventObject.totalDeltaY += this._wheel.eventObject.deltaY;
 
-    this.emit('wheel', Object.assign({}, this._wheel.eventObject, { originalevent: e }));
+    this.emit(
+      'wheel',
+      Object.assign({}, this._wheel.eventObject, { originalevent: e })
+    );
 
     this._wheel.timer = ((): number => {
       const originalevent: Event = e;
 
       return window.setTimeout(() => {
-        this.emit('endWheel', Object.assign({}, this._wheel.eventObject, { originalevent }));
+        this.emit(
+          'endWheel',
+          Object.assign({}, this._wheel.eventObject, { originalevent })
+        );
         // イベントオブジェクトの値をリセット
         this._wheel.eventObject.deltaX = this._wheel.eventObject.totalDeltaX = this._wheel.eventObject.maxDeltaX = this._wheel.eventObject.minDeltaX = 0;
         this._wheel.eventObject.deltaY = this._wheel.eventObject.totalDeltaY = this._wheel.eventObject.maxDeltaY = this._wheel.eventObject.minDeltaY = 0;

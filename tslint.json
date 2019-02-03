@@ -15,7 +15,10 @@
   "rules": {
     "no-console": false,
     "ordered-imports": false,
-    "prettier": true,
+    "prettier": [
+      true,
+      ".prettierrc"
+    ],
     "variable-name": [
       true,
       "ban-keywords",

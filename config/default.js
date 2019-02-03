@@ -60,6 +60,20 @@ module.exports = (() => {
 
   result.HOT_RELOAD = true;
 
+  result.PI = Math.PI;
+
+  // Base Font size
+  result.baseFontSize = 62.5; // (%)
+  result.baseRem = 10; // 62.5(%) = 10(px)
+
+  // Base line-height
+  result.lineHeight = result.baseRem / 15; // 1.5
+
+  result.fontFamilys = [
+    "'游ゴシック体', 'Yu Gothic', 'YuGothic', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'Meiryo', 'メイリオ', 'ＭＳ Ｐゴシック', 'MS PGothic', -apple-system, BlinkMacSystemFont, sans-serif",
+    "'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'Meiryo', 'メイリオ', 'ＭＳ Ｐゴシック', 'MS PGothic', -apple-system, BlinkMacSystemFont, Verdana, Roboto, 'Droid Sans', sans-serif"
+  ];
+
   // Base Window Size (px)
   result.xLargeScreenWidth = 1280;
   result.xLargeScreenGutterWidth = 60;
@@ -81,6 +95,8 @@ module.exports = (() => {
   result.spDesignMinWidth = 320;
   result.spDesignGutterWidth = 36;
   result.spDesignInnerWidth = result.spDesignWidth - (result.spDesignGutterWidth * 2);
+
+  result.colors = {};
 
   return result;
 })();
