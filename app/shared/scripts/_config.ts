@@ -1,5 +1,7 @@
 // webpack.DefinePlugin 読み込み用
-declare const CONFIG: object;
+declare const CONFIG: {
+  [key: string]: any;
+};
 
 const _CONFIG = CONFIG;
 

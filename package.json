@@ -73,7 +73,6 @@
     "css-loader": "^2.1.0",
     "css-mqpacker": "^7.0.0",
     "cssnano": "^4.1.8",
-    "doiuse": "^4.2.0",
     "eslint": "^5.12.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.0.0",

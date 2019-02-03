@@ -223,27 +223,52 @@ export default class SiteWide extends EventEmitter {
     );
 
     // matchMedia のリスト
+    /* tslint:disable:prettier */
     this._mediaQuerys = new Map([
-      ['SM_SCREEN_LESS', window.matchMedia('(max-width: 480px)')],
-      ['MD_SCREEN_LESS', window.matchMedia('(max-width: 767px)')],
+      [
+        'SM_SCREEN_LESS',
+        window.matchMedia(`(max-width: ${CONFIG.SMALL_SCREEN_WIDTH}px)`)
+      ],
+      [
+        'SM_SCREEN',
+        window.matchMedia(`(min-width: ${CONFIG.SMALL_SCREEN_WIDTH + 1}px)`)
+      ],
+      [
+        'MD_SCREEN_LESS',
+        window.matchMedia(`(max-width: ${CONFIG.MEDIUM_SCREEN_WIDTH}px)`)
+      ],
       [
         'MD_SCREEN',
-        window.matchMedia('(min-width: 481px) and (max-width: 767px)')
+        window.matchMedia(`(min-width: ${CONFIG.SMALL_SCREEN_WIDTH + 1}px) and (max-width: ${CONFIG.MEDIUM_SCREEN_WIDTH }px)`)
       ],
-      ['MD_SCREEN_OVER', window.matchMedia('(min-width: 768px)')],
-      ['LG_SCREEN_LESS', window.matchMedia('(max-width: 980px)')],
+      [
+        'MD_SCREEN_OVER',
+        window.matchMedia(`(min-width: ${CONFIG.MEDIUM_SCREEN_WIDTH + 1}px)`)],
+      [
+        'LG_SCREEN_LESS',
+        window.matchMedia(`(max-width: ${CONFIG.LARGE_SCREEN_WIDTH}px)`)],
       [
         'LG_SCREEN',
-        window.matchMedia('(min-width: 769px) and (max-width: 980px)')
+        window.matchMedia(`(min-width: ${CONFIG.MEDIUM_SCREEN_WIDTH + 1}px) and (max-width: ${CONFIG.LARGE_SCREEN_WIDTH}px)`)
       ],
-      ['LG_SCREEN_OVER', window.matchMedia('(min-width: 981px)')],
-      ['XLG_SCREEN_LESS', window.matchMedia('(max-width: 1280px)')],
+      [
+        'LG_SCREEN_OVER',
+        window.matchMedia(`(min-width: ${CONFIG.X_LARGE_SCREEN_WIDTH + 1}px)`)
+      ],
+      [
+        'XLG_SCREEN_LESS',
+        window.matchMedia(`(max-width: ${CONFIG.X_LARGE_SCREEN_WIDTH}px)`)
+      ],
       [
         'XLG_SCREEN',
-        window.matchMedia('(min-width: 981px) and (max-width: 1280px)')
+        window.matchMedia(`(min-width: ${CONFIG.LARGE_SCREEN_WIDTH}px) and (max-width: ${CONFIG.X_LARGE_SCREEN_WIDTH}px)`)
       ],
-      ['XLG_SCREEN_OVER', window.matchMedia('(min-width: 1281px)')]
+      [
+        'XLG_SCREEN_OVER',
+        window.matchMedia(`(min-width: ${CONFIG.X_LARGE_SCREEN_WIDTH + 1}px)`)
+      ]
     ]);
+    /* tslint:enable:prettier */
 
     this._mediaQuerys.forEach((mediaQueryList: MediaQueryList, key: string) => {
       mediaQueryList.addListener(

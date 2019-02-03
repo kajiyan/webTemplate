@@ -63,40 +63,90 @@ module.exports = (() => {
   result.PI = Math.PI;
 
   // Base Font size
-  result.baseFontSize = 62.5; // (%)
-  result.baseRem = 10; // 62.5(%) = 10(px)
+  result.BASE_FONT_SIZE = 62.5; // (%)
+  result.BASE_REM = 10; // 62.5(%) = 10(px)
 
   // Base line-height
-  result.lineHeight = result.baseRem / 15; // 1.5
+  result.LINE_HEIGHT = 15 / result.BASE_REM; // 1.5
 
-  result.fontFamilys = [
-    "'游ゴシック体', 'Yu Gothic', 'YuGothic', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'Meiryo', 'メイリオ', 'ＭＳ Ｐゴシック', 'MS PGothic', -apple-system, BlinkMacSystemFont, sans-serif",
-    "'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'Meiryo', 'メイリオ', 'ＭＳ Ｐゴシック', 'MS PGothic', -apple-system, BlinkMacSystemFont, Verdana, Roboto, 'Droid Sans', sans-serif"
-  ];
+  // 配列・オブジェクトの形式にするとpostcss-simple-vars から
+  // 参照できないので冗長だが個別に変数に入れる
+  result.FONT_FAMILYS_0 = "'游ゴシック体', 'Yu Gothic', 'YuGothic', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'Meiryo', 'メイリオ', 'ＭＳ Ｐゴシック', 'MS PGothic', -apple-system, BlinkMacSystemFont, sans-serif";
+  result.FONT_FAMILYS_1 = "'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'Meiryo', 'メイリオ', 'ＭＳ Ｐゴシック', 'MS PGothic', -apple-system, BlinkMacSystemFont, Verdana, Roboto, 'Droid Sans', sans-serif";
 
   // Base Window Size (px)
-  result.xLargeScreenWidth = 1280;
-  result.xLargeScreenGutterWidth = 60;
-  result.xLargeScreenContainerWidth = result.xLargeScreenWidth - (result.xLargeScreenGutterWidth * 2);
+  result.X_LARGE_SCREEN_WIDTH = 1280;
+  result.X_LARGE_SCREEN_GUTTEE_WIDTH = 60;
+  result.X_LARGE_SCREEN_CONTAINER_WIDTH = result.X_LARGE_SCREEN_WIDTH - (result.X_LARGE_SCREEN_GUTTEE_WIDTH * 2);
 
-  result.largeScreenWidth = 980;
-  result.largeScreenGutterWidth = 60;
-  result.largeScreenContainerWidth = result.largeScreenWidth - (result.largeScreenGutterWidth * 2);
+  result.LARGE_SCREEN_WIDTH = 980;
+  result.LARGE_SCREEN_GUTTEE_WIDTH = 60;
+  result.LARGE_SCREEN_CONTAINER_WIDTH = result.LARGE_SCREEN_WIDTH - (result.LARGE_SCREEN_GUTTEE_WIDTH * 2);
 
-  result.mediumScreenWidth = 767;
-  result.mediumScreenGutterWidth = 60;
-  result.mediumScreenContainerWidth = result.mediumScreenWidth - (result.mediumScreenGutterWidth * 2);
+  result.MEDIUM_SCREEN_WIDTH = 767;
+  result.MEDIUM_SCREEN_GUTTEE_WIDTH = 60;
+  result.MEDIUM_SCREEN_CONTAINER_WIDTH = result.MEDIUM_SCREEN_WIDTH - (result.MEDIUM_SCREEN_GUTTEE_WIDTH * 2);
 
-  result.smallScreenWidth = 480;
-  result.smallScreenGutterWidth = 20;
-  result.smallScreenContainerWidth = result.smallScreenWidth - (result.smallScreenGutterWidth * 2);
+  result.SMALL_SCREEN_WIDTH = 480;
+  result.SMALL_SCREEN_GUTTEE_WIDTH = 20;
+  result.SMALL_SCREEN_CONTAINER_WIDTH = result.SMALL_SCREEN_WIDTH - (result.SMALL_SCREEN_GUTTEE_WIDTH * 2);
 
-  result.spDesignWidth = 375;
-  result.spDesignMinWidth = 320;
-  result.spDesignGutterWidth = 36;
-  result.spDesignInnerWidth = result.spDesignWidth - (result.spDesignGutterWidth * 2);
+  result.SP_DESIGN_WIDTH = 375;
+  result.SP_DESIGN_MIN_WIDTH = 320;
+  result.SP_DESIGN_GUTTEE_WIDTH = 36;
+  result.SP_DESIGN_CONTAINER_WIDTH = result.SP_DESIGN_WIDTH - (result.SP_DESIGN_GUTTEE_WIDTH * 2);
 
-  result.colors = {};
+  // PCCS をベースに色をまとめる
+  // White
+  result.COLORS_W_0 = '#fff';
+
+  // Light Gray
+  // result.COLORS_LTGY_n = '#';
+
+  // Medium Gray
+  // result.COLORS_MGY_n = '#';
+
+  // Dark Gray
+  // result.COLORS_DKGY_n = '#';
+
+  // Black
+  result.COLORS_BK_0 = '#000';
+
+  // Pale
+  // result.COLORS_P_n = '#';
+
+  // Light grayish
+  // result.COLORS_LTG_n = '#';
+
+  // Grayish
+  // result.COLORS_G_n = '#';
+
+  // Dark grayish
+  // result.COLORS_DKG_n = '#';
+
+  // Light
+  // result.COLORS_LT_n = '#';
+
+  // Soft
+  // result.COLORS_ST_n = '#';
+
+  // Dull
+  // result.COLORS_D_n = '#';
+
+  // Dark
+  // result.COLORS_DK_n = '#';
+
+  // Bright
+  // result.COLORS_B_n = '#';
+
+  // Strong
+  // result.COLORS_S_n = '#';
+
+  // Deep
+  // result.COLORS_DP_n = '#';
+
+  // Vivid
+  // result.COLORS_V_n = '#';
 
   return result;
 })();

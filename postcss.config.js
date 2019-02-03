@@ -36,11 +36,11 @@ module.exports = (ctx) => ({
       variables: config
     },
     'postcss-calc': {},
-    'doiuse': {
-      'browsers': config.BROWSERS,
-      'ignore': ['css-touch-action', 'user-select-none', 'pointer', 'outline'],
-      'ignoreFiles': ['**/_sanitize.pcss']
-    },
+    // 'doiuse': {
+    //   'browsers': config.BROWSERS,
+    //   'ignore': ['css-touch-action', 'user-select-none', 'pointer', 'outline'],
+    //   'ignoreFiles': ['**/_sanitize.pcss']
+    // },
     // 'postcss-short': {},
     // 'postcss-apply': {},
     'postcss-easings': {},

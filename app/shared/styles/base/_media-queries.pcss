@@ -1,0 +1,28 @@
+/**
+ * cssnext#custom-media-queries
+ * http://cssnext.io/features/#custom-media-queries
+ */
+
+/* Small */
+@custom-media --only-sm-screen-less (width <= $(SMALL_SCREEN_WIDTH)px);
+@custom-media --only-sm-screen (width <= $(SMALL_SCREEN_WIDTH)px);
+@custom-media --only-sm-screen-over (width > $(SMALL_SCREEN_WIDTH)px);
+
+/* Medium */
+@custom-media --only-md-screen-less (width <= $(MEDIUM_SCREEN_WIDTH)px);
+@custom-media --only-md-screen (width > $(SMALL_SCREEN_WIDTH)px) and (width <= $(MEDIUM_SCREEN_WIDTH)px);
+@custom-media --only-md-screen-over (width > $(MEDIUM_SCREEN_WIDTH)px);
+
+/* Large */
+@custom-media --only-lg-screen-less (width <= $(LARGE_SCREEN_WIDTH)px);
+@custom-media --only-lg-screen (width > $(MEDIUM_SCREEN_WIDTH)px) and (width <= $(LARGE_SCREEN_WIDTH)px);
+@custom-media --only-lg-screen-over (width > $(LARGE_SCREEN_WIDTH)px);
+
+/* XLarge */
+@custom-media --only-xlg-screen-less (width <= $(X_LARGE_SCREEN_WIDTH)px);
+@custom-media --only-xlg-screen (width > $(LARGE_SCREEN_WIDTH)px) and (width <= $(X_LARGE_SCREEN_WIDTH)px);
+@custom-media --only-xlg-screen-over (width > $(X_LARGE_SCREEN_WIDTH)px);
+
+/* orientation */
+@custom-media --landscape screen and (orientation: landscape);
+@custom-media --portrait screen and (orientation: portrait);
