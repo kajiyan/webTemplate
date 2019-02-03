@@ -10,7 +10,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 const APP_DIR = path.join(process.cwd(), config.APP_DIR_PATH);
-const BUILD_DIR = path.join(process.cwd(), config.BUILD_DIR_PATH, config.ASSETS);
+const BUILD_DIR = path.join(process.cwd(), config.BUILD_DIR_PATH);
 
 const NODE_MODULES_DIR = path.resolve(process.cwd(), 'node_modules');
 const modernizrConfigFile = path.resolve(process.cwd(), '.modernizrrc');
@@ -72,7 +72,7 @@ module.exports = (options) => {
           if (!extRegExp.test(fileInfo.base) || ignoreRegExp.test(fileInfo.base)) {
             continue;
           }
-          const entryName = `${config.ASSETS}/${dir.replace(entryRegExp, '')}${config.JS}/${fileInfo.base.replace(extRegExp, '')}`;
+          const entryName = `${config.ASSETS}${sep}${dir.replace(entryRegExp, '')}${config.JS}${sep}${fileInfo.base.replace(extRegExp, '')}`;
 
           entry[entryName] = [];
 
@@ -82,7 +82,7 @@ module.exports = (options) => {
 
           entry[entryName].push(file);
         }
-      })(path.normalize(`${dirs[i]}/`));
+      })(path.normalize(`${dirs[i]}${sep}`));
     }
 
     return {
@@ -132,88 +132,7 @@ module.exports = (options) => {
           return results;
         })()
       ),
-      module: {
-        // モジュールがexport されていなければエラーにする
-        strictExportPresence: true,
-        // 各ローダーの設定 指定した配列の後ろからローダーが適応される
-        // oneOf 内は記述順に処理される
-        rules: [
-          {
-            oneOf: [
-              {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: [
-                  {
-                    loader: 'babel-loader',
-                    options: {
-                      presets: [
-                        [
-                          '@babel/preset-env',
-                          {
-                            targets: {
-                              browsers: config.BROWSERS
-                            },
-                            modules: false,
-                            useBuiltIns: 'usage'
-                          }
-                        ]
-                      ],
-                      cacheDirectory: true
-                    }
-                  }
-                ]
-              },
-              {
-                test: /\.(ts|tsx)$/,
-                include: APP_DIR,
-                use: [
-                  {
-                    loader: 'ts-loader',
-                    options: {
-                      transpileOnly: true
-                    }
-                  }
-                ]
-              },
-              {
-                test: /\.(css|pcss)$/,
-                use: [
-                  'style-loader',
-                  {
-                    loader: 'css-loader',
-                    options: {
-                      importLoaders: 1,
-                      modules: true
-                    }
-                  },
-                  {
-                    loader: 'postcss-loader',
-                    options: {
-                      ident: 'postcss'
-                    }
-                  }
-                ]
-              }
-              // {
-              //   test: /\.js$|\.jsx$|\.ts$|\.tsx$/,
-              //   enforce: 'pre',
-              //   exclude: /\^_.js$|\^_.jsx$|\^_.ts$|\^_.tsx$|node_modules/,
-              //   use: [
-              //     {
-              //       loader: 'eslint-loader'
-              //       // options: { fix: true }
-              //     }
-              //   ]
-              // },
-            ]
-          },
-          {
-            test: /\.modernizrrc$/,
-            loader: 'modernizr-loader!json-loader'
-          }
-        ]
-      },
+      module: options.module,
       resolve: {
         alias: {
           modernizr$: modernizrConfigFile
@@ -236,15 +155,15 @@ module.exports = (options) => {
                 // node_modules 配下のモジュールをバンドル対象とする
                 test: /node_modules/,
                 /*
-                 * 共通モジュールをバンドルしたファイル（チャンク）の名前。
-                 * 'vendor'を指定したため、出力されるファイル名はvendor.bundle.jsになる。
-                 */
-                name: `${config.ASSETS}/${config.SHARED}/${config.JS}/vendor`,
+                  * 共通モジュールをバンドルしたファイル（チャンク）の名前。
+                  * 'vendor'を指定したため、出力されるファイル名はvendor.chunk.jsになる。
+                  */
+                name: `${config.ASSETS}${sep}${config.SHARED}${sep}${config.JS}${sep}vendor`,
                 /*
-                 * 共通モジュールとしてバンドルする対象の設定。initial, async, allが存在する。
-                 * バンドルしたファイルを複数に分割して出力し、非同期で読み込む場合などは状況に応じてasync やall を指定する。
-                 */
-                chunks: 'async',
+                  * 共通モジュールとしてバンドルする対象の設定。initial, async, allが存在する。
+                  * バンドルしたファイルを複数に分割して出力し、非同期で読み込む場合などは状況に応じてasync やall を指定する。
+                  */
+                chunks: config.HOT_RELOAD ? 'async' : 'initial',
                 enforce: true
               }
             }

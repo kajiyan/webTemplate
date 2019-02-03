@@ -10,7 +10,10 @@
       "node_modules/**/*.ts",
       "postcss.config.js",
       "internals/**/*",
-      "server/**/*"
+      "server/**/*",
+      "htdocs/**/*",
+      "development-htdocs/**/*",
+      "production-htdocs/**/*"
     ]
   },
   "rules": {

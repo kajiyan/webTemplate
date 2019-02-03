@@ -201,16 +201,14 @@ fs.access(BUILD_DIR_PATH, err => {
 
                 createWatcher();
               } else if (
-                (process.env.NODE_ENV === 'development' &&
-                  config.LOCATION === 'global') ||
-                (process.env.NODE_ENV === 'production' &&
-                  config.LOCATION === 'global')
+                (process.env.NODE_ENV === 'development' && config.LOCATION === 'global') ||
+                (process.env.NODE_ENV === 'production' && config.LOCATION === 'global')
               ) {
                 (async () => {
                   const distFile = `${path.join(
                     BUILD_DIR_PATH,
-                    dir.replace(REG_EXP, '')
-                  )}${fileInfo.base.replace(EXT_REG_EXP, "")}.html`;
+                    _dir.replace(REG_EXP, '')
+                  )}${fileInfo.base.replace(EXT_REG_EXP, '')}.html`;
                   const compileStartTime = moment();
 
                   const html = pug.renderFile(file, options);
