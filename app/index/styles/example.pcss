@@ -1,0 +1,37 @@
+@import 'shared/styles/base/_animation.pcss';
+@import 'shared/styles/base/_media-queries.pcss';
+@import 'shared/styles/base/_mixin.pcss';
+
+:root {
+  --heading-color: #f0ff;
+}
+
+%container {
+  padding: 2rem;
+}
+
+main {
+  $minFontSize: 14;
+  $maxFontSize: 18;
+
+  @extend %container;
+
+  /* 線形補間 */
+  @mixin lerp
+    '{"property": "font-size", "min": { "view": $SMALL_SCREEN_WIDTH, "to": $minFontSize }, "max": { "view": $X_LARGE_SCREEN_WIDTH, "to": $maxFontSize }}'; /* ' */
+}
+
+h1 {
+  color: var(--heading-color);
+  margin: 0 0 calc(2% + 2%);
+
+  &::after {
+    font-size: 0.6em;
+    content: '$(BASE_URL)';
+    padding: 0 0.6em;
+  }
+}
+
+input:focus-within {
+  background: rgba(0, 0, 0, 0.3);
+}

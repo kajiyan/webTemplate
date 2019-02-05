@@ -7,8 +7,6 @@ const APP_DIR = path.join(process.cwd(), config.APP_DIR_PATH);
 const tsConfigFile = path.resolve(process.cwd(), 'tsconfig.json');
 const tsLintConfigFile = path.resolve(process.cwd(), 'tslint.json');
 
-let sep = process.platform === 'win32' ? '\\' : '/';
-
 module.exports = require('./webpack.base.babel')({
   mode: 'development',
   devtool: 'source-map',
@@ -89,17 +87,17 @@ module.exports = require('./webpack.base.babel')({
           }
         ]
       },
-      // {
-      //   test: /\.(js|jsx)$/,
-      //   enforce: 'pre',
-      //   exclude: /\^_.js$|\^_.jsx$|node_modules/,
-      //   use: [
-      //     {
-      //       loader: 'eslint-loader'
-      //       // options: { fix: true }
-      //     }
-      //   ]
-      // },
+      {
+        test: /\.(js|jsx)$/,
+        enforce: 'pre',
+        exclude: /\^_.js$|\^_.jsx$|node_modules/,
+        use: [
+          {
+            loader: 'eslint-loader'
+            // options: { fix: true }
+          }
+        ]
+      },
       {
         test: /\.modernizrrc$/,
         loader: 'modernizr-loader!json-loader'

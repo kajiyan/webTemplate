@@ -33,23 +33,14 @@ module.exports = {
     'compat/compat': 'error',
     'comma-dangle': ['error', 'never'],
     'comma-style': ['error', 'last'],
-    'import/imports-first': 0,
-    'import/newline-after-import': 0,
-    'import/no-dynamic-require': 0,
-    'import/no-extraneous-dependencies': 0,
-    'import/no-named-as-default': 0,
-    'import/no-unresolved': 2,
-    'import/no-webpack-loader-syntax': 0,
-    'import/prefer-default-export': 0,
-    // 'import/extensions': 'off',
-    // 'import/no-extraneous-dependencies': [
-    //   'error',
-    //   {
-    //     devDependencies: true
-    //   }
-    // ],
-    // 'import/no-named-as-default': 'off',
-    // 'import/no-unresolved': 'error',
+    'import/imports-first': 'off',
+    'import/newline-after-import': 'off',
+    'import/no-dynamic-require': 'off',
+    'import/no-extraneous-dependencies': 'off',
+    'import/no-named-as-default': 'off',
+    'import/no-unresolved': 'error',
+    'import/no-webpack-loader-syntax': 'off',
+    'import/prefer-default-export': 'off',
     'max-len': 'off',
     'no-console': 'off',
     'no-param-reassign': [
@@ -58,8 +49,7 @@ module.exports = {
         props: false
       }
     ],
-    // 'no-unused-vars': 'error',
-    'no-unused-vars': 'off',
+    'no-unused-vars': 'error',
     'no-use-before-define': 'off',
     'prefer-template': 'error',
     'prettier/prettier': ['error', prettierOptions],

@@ -1,9 +1,11 @@
 const path = require('path');
 const config = require('config');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const saveLicense = require('uglify-save-license');
 
-// const APP_DIR = path.join(process.cwd(), config.APP_DIR_PATH);
+const APP_DIR = path.join(process.cwd(), config.APP_DIR_PATH);
+
 const tsConfigFile = path.resolve(process.cwd(), 'tsconfig.json');
 const tsLintConfigFile = path.resolve(process.cwd(), 'tslint.json');
 
@@ -23,10 +25,7 @@ module.exports = require('./webpack.base.babel')({
     return results;
   })(),
   module: {
-    // モジュールがexport されていなければエラーにする
     strictExportPresence: true,
-    // 各ローダーの設定 指定した配列の後ろからローダーが適応される
-    // oneOf 内は記述順に処理される
     rules: [
       {
         oneOf: [
@@ -84,18 +83,18 @@ module.exports = require('./webpack.base.babel')({
                 }
               }
             ]
+          },
+          {
+            test: /\.(js|jsx)$/,
+            enforce: 'pre',
+            exclude: /\^_.js$|\^_.jsx$|node_modules/,
+            use: [
+              {
+                loader: 'eslint-loader'
+                // options: { fix: true }
+              }
+            ]
           }
-          // {
-          //   test: /\.js$|\.jsx$|\.ts$|\.tsx$/,
-          //   enforce: 'pre',
-          //   exclude: /\^_.js$|\^_.jsx$|\^_.ts$|\^_.tsx$|node_modules/,
-          //   use: [
-          //     {
-          //       loader: 'eslint-loader'
-          //       // options: { fix: true }
-          //     }
-          //   ]
-          // },
         ]
       },
       {
@@ -108,15 +107,20 @@ module.exports = require('./webpack.base.babel')({
     minimizer: [
       new UglifyJsPlugin({
         // parallel を指定すると 'ERROR in {filename}.js from UglifyJs' というエラーが出力される
+        // cache: true,
         // parallel: true,
         uglifyOptions: {
-          output: {
-            comments: saveLicense
-          },
           compress: {
-            drop_console: true
+            comparisons: false,
+            drop_console: true,
+            inline: 1
           },
-          ie8: false,
+          output: {
+            // ライセンス情報は削除しない
+            comments: saveLicense,
+            // 文字列と正規表現のUnicode文字をエスケープする
+            ascii_only: true
+          },
           warnings: false
         }
       })

@@ -33,24 +33,41 @@
     "rm:pro": "rimraf production-htdocs",
     "mkdirp:dev": "mkdirp development-htdocs/assets",
     "mkdirp:pro": "mkdirp production-htdocs/assets",
-    "cpx:dev": "cpx \"htdocs/**/*.{js,gif,png,jpg,jpeg,ico,svg,mp3,mp4,webm,eot,ttf,otf,woff,woff2,xml,json,txt,webmanifest,htaccess}\" development-htdocs",
+    "cpx:dev": "cpx \"htdocs/**/**/*.{js,gif,png,jpg,jpeg,ico,svg,mp3,mp4,webm,eot,ttf,otf,woff,woff2,xml,json,txt,webmanifest,htaccess}\" development-htdocs",
     "cpx:pro": "cpx \"htdocs/**/**/*.{js,gif,png,jpg,jpeg,ico,svg,mp3,mp4,webm,eot,ttf,otf,woff,woff2,xml,json,txt,webmanifest,htaccess}\" production-htdocs",
     "lint:staged": "lint-staged",
     "lint:styles": "stylelint \"**/*.pcss\"",
     "lint:styles:fix": "stylelint --fix",
     "lint:scripts": "eslint \"app\" --ext .js,.jsx --config .eslintrc.js --ignore-path .gitignore --ignore-pattern internals",
     "lint:scripts:fix": "eslint \"app\" --ext .js,.jsx --config .eslintrc.js --ignore-path .gitignore --ignore-pattern internals --fix",
-    "build": "cross-env NODE_ENV=production run-s rm:pro mkdirp:pro cpx:pro global:pro:template",
+    "lint:ts": "tslint --config tslint.json --project tsconfig.json",
+    "lint:ts:fix": "tslint --config tslint.json --project tsconfig.json --fix",
+    "build": "cross-env NODE_ENV=production run-s rm:pro mkdirp:pro cpx:pro global:pro:template global:pro:scripts",
     "build-dev": "cross-env NODE_ENV=development run-s rm:dev mkdirp:dev cpx:dev global:dev:template global:dev:scripts",
-    "dev": "cross-env NODE_ENV=development run-p local:dev:server local:dev:template"
+    "dev": "cross-env NODE_ENV=development run-p local:dev:server local:dev:template",
+    "watch-build": "cross-env NODE_ENV=production run-s rm:pro mkdirp:pro cpx:pro global:pro:template global:pro:styles global:pro:scripts",
+    "watch-build-dev": "cross-env NODE_ENV=development run-s rm:dev mkdirp:dev cpx:dev global:dev:template global:dev:styles global:dev:scripts",
+    "watch": "cross-env NODE_ENV=development run-p local:dev:server local:dev:template local:dev:styles"
   },
   "lint-staged": {
     "*.pcss": [
       "yarn run lint:styles:fix",
       "git add --force"
     ],
-    "*.ts": [
+    "*.js": [
       "yarn run lint:scripts:fix",
+      "git add --force"
+    ],
+    "*.jsx": [
+      "yarn run lint:scripts:fix",
+      "git add --force"
+    ],
+    "*.ts": [
+      "yarn run lint:ts:fix",
+      "git add --force"
+    ],
+    "*.tsx": [
+      "yarn run lint:ts:fix",
       "git add --force"
     ],
     "ignore": [
@@ -116,6 +133,7 @@
     "postcss-reporter": "^6.0.1",
     "postcss-simple-vars": "^5.0.1",
     "postcss-sorting": "^4.0.1",
+    "pre-commit": "^1.2.2",
     "prettier": "^1.16.3",
     "pug": "^2.0.3",
     "pug-lint": "^2.5.0",
