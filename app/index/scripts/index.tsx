@@ -12,3 +12,4 @@ ReactDOM.render(
 a;
 あ;
 a
+a
