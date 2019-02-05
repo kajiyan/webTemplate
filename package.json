@@ -35,7 +35,6 @@
     "mkdirp:pro": "mkdirp production-htdocs/assets",
     "cpx:dev": "cpx \"htdocs/**/**/*.{js,gif,png,jpg,jpeg,ico,svg,mp3,mp4,webm,eot,ttf,otf,woff,woff2,xml,json,txt,webmanifest,htaccess}\" development-htdocs",
     "cpx:pro": "cpx \"htdocs/**/**/*.{js,gif,png,jpg,jpeg,ico,svg,mp3,mp4,webm,eot,ttf,otf,woff,woff2,xml,json,txt,webmanifest,htaccess}\" production-htdocs",
-    "lint:staged": "lint-staged",
     "lint:styles": "stylelint \"**/*.pcss\"",
     "lint:styles:fix": "stylelint --fix",
     "lint:scripts": "eslint \"app\" --ext .js,.jsx --config .eslintrc.js --ignore-path .gitignore --ignore-pattern internals",
@@ -49,32 +48,25 @@
     "watch-build-dev": "cross-env NODE_ENV=development run-s rm:dev mkdirp:dev cpx:dev global:dev:template global:dev:styles global:dev:scripts",
     "watch": "cross-env NODE_ENV=development run-p local:dev:server local:dev:template local:dev:styles"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.pcss": [
       "yarn run lint:styles:fix",
       "git add --force"
     ],
-    "*.js": [
+    "*.{js,jsx}": [
       "yarn run lint:scripts:fix",
       "git add --force"
     ],
-    "*.jsx": [
-      "yarn run lint:scripts:fix",
-      "git add --force"
-    ],
-    "*.ts": [
+    "*.{ts,tsx}": [
       "yarn run lint:ts:fix",
       "git add --force"
-    ],
-    "*.tsx": [
-      "lint:ts:fix",
-      "git add --force"
-    ],
-    "ignore": [
-      "@types"
     ]
   },
-  "pre-commit": "lint:staged",
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
@@ -111,6 +103,7 @@
     "eslint-plugin-react": "^7.12.4",
     "fork-ts-checker-webpack-plugin": "^0.5.2",
     "glob": "^7.1.3",
+    "husky": "^1.3.1",
     "json-loader": "^0.5.7",
     "lint-staged": "^8.1.3",
     "mkdirp": "^0.5.1",
@@ -134,7 +127,6 @@
     "postcss-reporter": "^6.0.1",
     "postcss-simple-vars": "^5.0.1",
     "postcss-sorting": "^4.0.1",
-    "pre-commit": "^1.2.2",
     "prettier": "^1.16.3",
     "pug": "^2.0.3",
     "pug-lint": "^2.5.0",
