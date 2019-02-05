@@ -67,7 +67,7 @@
       "git add --force"
     ],
     "*.tsx": [
-      "yarn run lint:ts:fix",
+      "lint:ts:fix",
       "git add --force"
     ],
     "ignore": [
