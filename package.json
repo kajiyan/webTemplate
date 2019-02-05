@@ -67,7 +67,14 @@
         "yarn run lint:ts:fix",
         "git add --force"
       ]
-    }
+    },
+    "ignore": [
+      "@types",
+      "config",
+      "htdocs",
+      "internals",
+      "server"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

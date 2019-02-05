@@ -9,7 +9,7 @@
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "rootDir": "src",
+    "rootDir": "app",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -20,8 +20,12 @@
     "noUnusedLocals": true
   },
   "exclude": [
+    "config",
     "node_modules",
     "internals",
-    "server"
+    "server",
+    "production-htdocs",
+    "production-htdocs",
+    "postcss.config.js"
   ]
 }

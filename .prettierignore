@@ -1,7 +1,11 @@
-build/
+config/
+htdocs/
+production-htdocs/
+development-htdocs/
 node_modules/
 internals/
 package-lock.json
 yarn.lock
 package.json
+postcss.config.js
 .*

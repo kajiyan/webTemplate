@@ -52,3 +52,10 @@ __snapshots__
 # Package.json
 package.json
 .travis.yml
+
+config
+htdocs
+development-htdocs
+production-htdocs
+server
+postcss.config.js

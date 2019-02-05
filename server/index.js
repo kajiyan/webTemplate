@@ -1,19 +1,16 @@
-const fs = require('fs');
 const path = require('path');
 const browserSync = require('browser-sync');
 const config = require('config');
 const webpack = require('webpack');
-const webpackConfig = require('../internals/webpack/webpack.development.babel');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
+const webpackConfig = require('../internals/webpack/webpack.development.babel');
 
 const BUILD_DIR_PATH = path.join(process.cwd(), config.BUILD_DIR_PATH);
 const compiler = webpack(webpackConfig);
 
 browserSync({
-  files: [
-    `${BUILD_DIR_PATH}/**/*`
-  ],
+  files: [`${BUILD_DIR_PATH}/**/*`],
   // open: 'external',
   port: config.PORT,
   server: {
