@@ -54,18 +54,20 @@
     }
   },
   "lint-staged": {
-    "*.pcss": [
-      "yarn run lint:styles:fix",
-      "git add --force"
-    ],
-    "*.{js,jsx}": [
-      "yarn run lint:scripts:fix",
-      "git add --force"
-    ],
-    "*.{ts,tsx}": [
-      "yarn run lint:ts:fix",
-      "git add --force"
-    ]
+    "linters": {
+      "*.pcss": [
+        "yarn run lint:styles:fix",
+        "git add --force"
+      ],
+      "*.{js,jsx}": [
+        "yarn run lint:scripts:fix",
+        "git add --force"
+      ],
+      "*.{ts,tsx}": [
+        "yarn run lint:ts:fix",
+        "git add --force"
+      ]
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
