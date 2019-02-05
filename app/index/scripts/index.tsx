@@ -9,5 +9,6 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement
 );
 
+a;
+あ;
 a
-あ
