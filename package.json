@@ -73,7 +73,8 @@
       "config",
       "htdocs",
       "internals",
-      "server"
+      "server",
+      "postcss.config.js"
     ]
   },
   "devDependencies": {

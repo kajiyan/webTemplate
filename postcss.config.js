@@ -25,7 +25,7 @@ module.exports = (ctx) => ({
   plugins: {
     'stylelint': {},
     'postcss-import': (() => {
-      let result = {};
+      const result = {};
       result.path = [config.APP_DIR_NAME];
       result.plugins = [stylelint()];
       return result;
@@ -49,8 +49,8 @@ module.exports = (ctx) => ({
       mixins: {
         lerp: (mixin, json) => {
           const keydata = JSON.parse(json.replace(/^'+|'+$/g, ''));
-          const m = (keydata['max']['to'] - keydata['min']['to']) / (keydata['max']['view'] - keydata['min']['view']);
-          const b = keydata['max']['to'] - m * keydata['max']['view'];
+          const m = (keydata.max.to - keydata.min.to) / (keydata.max.view - keydata.min.view);
+          const b = keydata.max.to - m * keydata.max.view;
           let sign = '+';
 
           if (b < 0) {
@@ -78,7 +78,7 @@ module.exports = (ctx) => ({
     'postcss-flexbugs-fixes': {},
     'postcss-discard-duplicates': {},
     'postcss-sorting': {},
-    'pixrem': {},
+    // 'pixrem': {},
     'css-mqpacker': {},
     'cssnano': process.env.NODE_ENV === 'production' ? { autoprefixer: false, normalizeUrl: false, zindex: false } : false,
     'postcss-reporter': { clearReportedMessages: true }
