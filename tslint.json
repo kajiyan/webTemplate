@@ -6,6 +6,7 @@
   ],
   "linterOptions": {
     "exclude": [
+      "@type/**/*",
       "config/**/*",
       "node_modules/**/*.ts",
       "postcss.config.js",

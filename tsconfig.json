@@ -20,6 +20,9 @@
     "noUnusedLocals": true
   },
   "exclude": [
+    "@type",
+    "app/**/*.js",
+    "app/**/*.jsx",
     "config",
     "node_modules",
     "internals",

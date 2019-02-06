@@ -24,13 +24,13 @@ module.exports = {
     'prettier',
     'react',
     'promise',
-    'compat'
+    // 'compat'
   ],
   rules: {
     'arrow-body-style': ['error', 'as-needed'],
     'arrow-parens': 'off',
     'class-methods-use-this': 'off',
-    'compat/compat': 'error',
+    // 'compat/compat': 'error',
     'comma-dangle': ['error', 'never'],
     'comma-style': ['error', 'last'],
     'import/imports-first': 'off',
